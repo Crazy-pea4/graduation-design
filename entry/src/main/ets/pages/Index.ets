@@ -1,53 +1,90 @@
+import router from '@ohos.router';
 import { mockData } from "../const/mock"
+import { PlayCard } from "../components/PlayCard"
+
 
 @Entry
 @Component
 struct Index {
-  @State message: string = 'Hello World'
-  @State searchBoxHeight: number = 0
+  @State searchBoxHeight: string = '0%'
+  @State musicTitle: string = ''
+  @State musicAuthor: string = ''
 
   build() {
     Column() {
-      /* 主搜索框 */
-      Row() {
-        Search({placeholder: '查找音乐'}).onTouch(() => {
-          this.searchBoxHeight = 200
-        })
-      }
-      Row() {
+      Scroll() {
         Column() {
-        }.width('100%').height('100%').backgroundColor('#ccc2')
-      }.height(this.searchBoxHeight).animation({duration: 500})
-      /* 音乐列表 */
-      Column() {
-        ForEach(mockData, (item, index) => {
+          /* 主搜索框 */
+          Row() {
+            Search({ placeholder: '查找音乐' })
+              .animation({ duration: 500 })
+              .searchButton('搜索')
+              .onSubmit(() => {
+                router.pushUrl({url: 'pages/SearchPage'})
+                console.log('123123')
+              })
+            //   .onTouch(() => {
+            //   this.searchBoxHeight = '95%'
+            // })
+          }
+          .padding({ left: 10, right: 10 })
+
           Row() {
             Column() {
-              Row() {
-                Text(item.title)
-              }
-
-              Row() {
-                Text(item.author)
-              }
             }
-            .border({
-              width: 1,
-              color: 'blue'
-            })
             .width('100%')
-            .alignItems(HorizontalAlign.Start)
+            .height('100%')
+            .backgroundColor('#ccc2')
           }
-          .width('100%')
-          .padding({
-            top: (index === 0 || index === mockData.length - 1) ? 0 : 10,
-            bottom: (index === 0 || index === mockData.length - 1) ? 0 : 10
+          .height(this.searchBoxHeight)
+          .animation({ duration: 500 })
+          /* 音乐列表 */
+          Column() {
+            ForEach(mockData, (item, index) => {
+              Row() {
+                Column() {
+                  Row() {
+                    Column() {
+
+                    }.width(50).height('100%').backgroundColor('#aaf9')
+
+                    Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.SpaceEvenly }) {
+                      Text(item.title)
+
+                      Text(item.author)
+                        .fontSize(14)
+                    }
+                  }
+                }
+                .border({
+                  width: 1,
+                  color: '#aaf'
+                })
+                .width('100%')
+                .alignItems(HorizontalAlign.Start)
+                .padding({ left: 10, right: 10 })
+              }
+              .width('100%')
+              .height(50)
+              .margin({
+                bottom: index === mockData.length - 1 ? 0 : 10
+              })
+              .onClick(() => {
+                this.musicTitle = item.title
+                this.musicAuthor = item.author
+              })
+            })
+          }
+          .onTouch(() => {
+            this.searchBoxHeight = '0%'
           })
-        })
-      }.onTouch(() => {
-        this.searchBoxHeight = 0
-      })
+        }
+        // .height('92%')
+        .padding({ top: 10, bottom: 10 })
+
+      }
+
+      PlayCard({ musicTitle: $musicTitle, musicAuthor: $musicAuthor })
     }
-    .padding(10)
   }
 }
