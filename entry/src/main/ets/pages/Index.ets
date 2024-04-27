@@ -2,7 +2,6 @@ import router from '@ohos.router';
 import { mockData } from "../const/mock"
 import { PlayCard } from "../components/PlayCard"
 import { AvPlayer} from "../Utils/AVPlayer"
-AvPlayer.createAVPlayerInstance()
 
 @Entry
 @Component

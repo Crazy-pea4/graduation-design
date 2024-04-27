@@ -69,12 +69,13 @@ class AVPLAYER {
     console.log('111111111111111111111')
   }
 
-  public async setAVPlayerUrl() {
+  public async setAVPlayerUrl(url?: string) {
     if(!this.avPlayer.url) {
-      this.avPlayer.url = 'http://music.163.com/song/media/outer/url?id=447925558.mp3';
+      await this.avPlayer.reset();
+      this.avPlayer.url = url || 'http://music.163.com/song/media/outer/url?id=447925558.mp3';
     } else {
       await this.avPlayer.reset();
-      this.avPlayer.url = 'http://music.163.com/song/media/outer/url?id=447925558.mp3';
+      this.avPlayer.url = url || 'http://music.163.com/song/media/outer/url?id=447925558.mp3';
     }
   }
 }
