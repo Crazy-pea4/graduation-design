@@ -1,7 +1,8 @@
 import router from '@ohos.router';
 import { mockData } from "../const/mock"
 import { PlayCard } from "../components/PlayCard"
-
+import { AvPlayer} from "../Utils/AVPlayer"
+AvPlayer.createAVPlayerInstance()
 
 @Entry
 @Component
@@ -20,7 +21,7 @@ struct Index {
               .animation({ duration: 500 })
               .searchButton('搜索')
               .onSubmit(() => {
-                router.pushUrl({url: 'pages/SearchPage'})
+                router.pushUrl({ url: 'pages/SearchPage' })
                 console.log('123123')
               })
             //   .onTouch(() => {
@@ -48,12 +49,13 @@ struct Index {
 
                     }.width(50).height('100%').backgroundColor('#aaf9')
 
-                    Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.SpaceEvenly }) {
+                    Flex({ direction: FlexDirection.Row, alignItems: ItemAlign.Center }) {
                       Text(item.title)
-
+                      Text('-')
+                        .margin({ left: 5, right: 5 })
                       Text(item.author)
                         .fontSize(14)
-                    }
+                    }.margin({ left: 10 })
                   }
                 }
                 .border({
@@ -69,9 +71,11 @@ struct Index {
               .margin({
                 bottom: index === mockData.length - 1 ? 0 : 10
               })
-              .onClick(() => {
+
+              .onClick(async () => {
                 this.musicTitle = item.title
                 this.musicAuthor = item.author
+                await AvPlayer.setAVPlayerUrl()
               })
             })
           }
