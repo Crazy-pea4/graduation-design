@@ -2,6 +2,6 @@
 @Component
 struct SearchPage {
   build() {
-    Text('123123213').fontSize(30)
+    Text('1231232131').fontSize(30)
   }
 }
