@@ -2,7 +2,6 @@ import router from '@ohos.router';
 import { mockData } from "../const/mock"
 import { PlayCard } from "../components/PlayCard"
 import { AvPlayer } from "../Utils/AVPlayer"
-import { httpRequestGet } from '../Utils/HttpRequest';
 
 @Entry
 @Component
@@ -19,7 +18,7 @@ struct Index {
             Search({ placeholder: '查找音乐' })
               .animation({ duration: 500 })
               .searchButton('搜索')
-              .onSubmit(() => {
+              .onSubmit(async () => {
                 router.pushUrl({ url: 'pages/Search' })
                 console.log('123123')
               })

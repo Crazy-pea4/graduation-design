@@ -35,6 +35,7 @@ async function base(url: string, method: http.RequestMethod, extraData?: any) {
     return serverData;
   } catch (err) {
     serverData.msg = '调用接口失败';
+    console.info(JSON.stringify(err), JSON.stringify(serverData), 'httpRequestData Failed')
 
     return serverData;
   }

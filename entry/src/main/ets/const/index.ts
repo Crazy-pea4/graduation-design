@@ -1,2 +1,2 @@
 // HttpRequest
-export const BASE_URL: string = 'http://10.40.35.93:3000';
+export const BASE_URL: string = 'http://192.168.1.3:3000/api';
