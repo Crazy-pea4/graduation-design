@@ -1,4 +1,5 @@
 import media from '@ohos.multimedia.media';
+import fs from '@ohos.file.fs';
 
 class AVPLAYER {
   private avPlayer;
@@ -69,13 +70,28 @@ class AVPLAYER {
     console.log('111111111111111111111')
   }
 
-  public async setAVPlayerUrl(url?: string) {
-    if(!this.avPlayer.url) {
-      await this.avPlayer.reset();
-      this.avPlayer.url = url || 'http://music.163.com/song/media/outer/url?id=447925558.mp3';
+  public stopPlay() {
+    this.avPlayer.reset();
+  }
+
+  // 播放音频
+  public async playAudio(path?: string) {
+    this.avPlayer.reset();
+    // 如果path存在则是播放录制音频，否则是播放正常http协议音频
+    if(path) {
+      let fdPath = 'fd://';
+      let res = fs.accessSync(path);
+      if (!res) {
+        console.error(`音频文件不存在：${path}`);
+        return
+      }
+      console.info(`播放音频文件：${path}`)
+      // 打开相应的资源文件地址获取fd
+      let file = await fs.open(path);
+      fdPath = fdPath + '' + file.fd;
+      this.avPlayer.url = fdPath;
     } else {
-      await this.avPlayer.reset();
-      this.avPlayer.url = url || 'http://music.163.com/song/media/outer/url?id=447925558.mp3';
+      this.avPlayer.url = 'http://music.163.com/song/media/outer/url?id=447925558.mp3';
     }
   }
 }

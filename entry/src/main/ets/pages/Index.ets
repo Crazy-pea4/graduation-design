@@ -1,12 +1,12 @@
 import router from '@ohos.router';
 import { mockData } from "../const/mock"
 import { PlayCard } from "../components/PlayCard"
-import { AvPlayer} from "../Utils/AVPlayer"
+import { AvPlayer } from "../Utils/AVPlayer"
+import { httpRequestGet } from '../Utils/HttpRequest';
 
 @Entry
 @Component
 struct Index {
-  @State searchBoxHeight: string = '0%'
   @State musicTitle: string = ''
   @State musicAuthor: string = ''
 
@@ -20,23 +20,31 @@ struct Index {
               .animation({ duration: 500 })
               .searchButton('搜索')
               .onSubmit(() => {
-                router.pushUrl({ url: 'pages/SearchPage' })
+                router.pushUrl({ url: 'pages/Search' })
                 console.log('123123')
               })
-            //   .onTouch(() => {
-            //   this.searchBoxHeight = '95%'
-            // })
           }
           .padding({ left: 10, right: 10 })
-
+          /* 个人信息 */
           Row() {
-            Column() {
+            Flex({ direction: FlexDirection.Column }) {
+              /* 个人卡片 */
+              Row() {
+                Button('登录').onClick(() => {
+                  router.pushUrl({ url: 'pages/Login' })
+                })
+              }
+
+              Flex({ justifyContent: FlexAlign.SpaceAround }) {
+                Text('喜欢')
+                Text('本地')
+              }.margin({ top: 15 })
             }
+            .padding({ top: 15, bottom: 15, left: 15, right: 15 })
+            .margin({ top: 10, bottom: 20 })
             .width('100%')
-            .height('100%')
             .backgroundColor('#ccc2')
           }
-          .height(this.searchBoxHeight)
           .animation({ duration: 500 })
           /* 音乐列表 */
           Column() {
@@ -74,17 +82,12 @@ struct Index {
               .onClick(async () => {
                 this.musicTitle = item.title
                 this.musicAuthor = item.author
-                await AvPlayer.setAVPlayerUrl()
+                await AvPlayer.playAudio()
               })
             })
           }
-          .onTouch(() => {
-            this.searchBoxHeight = '0%'
-          })
         }
-        // .height('92%')
-        .padding({ top: 10, bottom: 10 })
-
+        .padding({ top: 10, bottom: 10, left: 10, right: 10 })
       }
 
       PlayCard({ musicTitle: $musicTitle, musicAuthor: $musicAuthor })
