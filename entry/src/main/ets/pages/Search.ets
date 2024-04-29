@@ -38,11 +38,13 @@ struct SearchPage {
   private playIng: boolean = false;
 
   build() {
-    Row() {
+    Flex({direction: FlexDirection.Column}) {
       // 测试网络
       Button('发送文件txt').onClick(async (event: ClickEvent) => {
         // 获取应用文件路径
         let cacheDir = context.cacheDir;
+
+        await fs.copyFile(audioPath, cacheDir + '/audio.m4a')
 
         // 新建一个本地应用文件
         let file = fs.openSync(cacheDir + '/test.txt', fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
@@ -55,10 +57,11 @@ struct SearchPage {
           header: { key1: 'Content-Type', key2: 'multipart/form-data' },
           method: 'POST',
           files: [
-            { filename: 'test.txt', name: 'file', uri: 'internal://cache/test.txt', type: 'txt' }
+            { filename: 'audio.m4a', name: 'file', uri: 'internal://cache/audio.m4a', type: 'm4a' }
+            // { filename: 'test.txt', name: 'file', uri: 'internal://cache/test.txt', type: 'txt' }
           ],
           data: [
-            { name: 'name', value: 'value' }
+            { name: 'name', value: 'value123123' }
           ]
         }
 

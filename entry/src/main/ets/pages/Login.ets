@@ -1,5 +1,6 @@
 import Prompt from '@system.prompt'
 import router from '@ohos.router'
+import { httpRequestPost } from '../Utils/HttpRequest'
 
 @Entry
 @Component
@@ -31,6 +32,9 @@ struct Login {
           .height(46)
           .backgroundColor('#f7f7f7')
           .fontColor(Color.Black)
+          .onClick(() => {
+            httpRequestPost('user/', {})
+          })
       }
       .margin({ top: 150 })
     }

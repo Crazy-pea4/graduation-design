@@ -11,8 +11,8 @@ async function base(url: string, method: http.RequestMethod, extraData?: any) {
   let serverData: {
     code,
     data: any,
-    msg: string
-  } = { code: 0, data: '', msg: '' };
+    message: string
+  } = { code: 0, data: '', message: '' };
 
   try {
     let res = await httpRequest.request(url, {
@@ -23,18 +23,15 @@ async function base(url: string, method: http.RequestMethod, extraData?: any) {
     // 处理数据，并返回
     if (res.responseCode === 200) {
       // 获取返回数据
-      let result = `${res.result}`;
-      let resultJson = JSON.parse(result);
-      serverData.data = resultJson.data;
-      serverData.code = res.responseCode;
+      serverData = JSON.parse(res.result as string);;
     } else {
-      serverData.code = res.responseCode;
+      serverData = JSON.parse(res.result as string);
     }
 
-    console.info(JSON.stringify(serverData), 'httpRequestData')
+    console.info(JSON.stringify(serverData), 'httpRequestData success')
     return serverData;
   } catch (err) {
-    serverData.msg = '调用接口失败';
+    serverData.message = '调用接口失败';
     console.info(JSON.stringify(err), JSON.stringify(serverData), 'httpRequestData Failed')
 
     return serverData;

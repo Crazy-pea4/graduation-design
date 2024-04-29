@@ -37,6 +37,10 @@ class AVRECORDER {
     // 1.创建录制实例
     this.avRecorder = await media.createAVRecorder();
     this.setAudioRecorderCallback();
+    // 防止重复写入
+    if(fs.accessSync(audioPath)) {
+      fs.unlinkSync(audioPath);
+    }
     // 创建并打开录音文件
     this.audioFile = fs.openSync(audioPath, fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
     // 2.获取录制文件fd赋予avConfig里的url

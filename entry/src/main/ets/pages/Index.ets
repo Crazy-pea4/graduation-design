@@ -81,7 +81,7 @@ struct Index {
               .onClick(async () => {
                 this.musicTitle = item.title
                 this.musicAuthor = item.author
-                await AvPlayer.playAudio()
+                AvPlayer.playAudio()
               })
             })
           }

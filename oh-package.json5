@@ -1,13 +1,12 @@
 {
-  "name": "music_share_platform",
-  "version": "1.0.0",
-  "description": "Please describe the basic information.",
-  "main": "",
-  "author": "",
   "license": "",
-  "dependencies": {
-  },
   "devDependencies": {
     "@ohos/hypium": "1.0.6"
-  }
+  },
+  "author": "",
+  "name": "music_share_platform",
+  "description": "Please describe the basic information.",
+  "main": "",
+  "version": "1.0.0",
+  "dependencies": {}
 }

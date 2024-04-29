@@ -77,6 +77,8 @@ class AVPLAYER {
   // 播放音频
   public async playAudio(path?: string) {
     this.avPlayer.reset();
+    // 延时100ms 防止avPlayer还没进入idle状态就setUrl
+    await new Promise((res) => setTimeout(() => res(1), 100))
     // 如果path存在则是播放录制音频，否则是播放正常http协议音频
     if(path) {
       let fdPath = 'fd://';
