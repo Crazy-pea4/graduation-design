@@ -1,8 +1,13 @@
 import media from '@ohos.multimedia.media';
 import fs from '@ohos.file.fs';
 
+export enum PlayAudioFrom {
+  local = 'local',
+  net = 'net',
+}
+
 class AVPLAYER {
-  private avPlayer;
+  public avPlayer;
 
   // 注册avplayer回调函数
   private setAVPlayerCallback() {
@@ -21,7 +26,7 @@ class AVPLAYER {
       switch (state) {
         case 'idle': // 成功调用reset接口后触发该状态机上报
           console.info('AVPlayer state idle called.');
-          // this.avPlayer.release(); // 调用release接口销毁实例对象
+        // this.avPlayer.release(); // 调用release接口销毁实例对象
           break;
         case 'initialized': // avplayer 设置播放源后触发该状态上报
           console.info('AVPlayerstate initialized called.');
@@ -37,19 +42,19 @@ class AVPLAYER {
           break;
         case 'playing': // play成功调用后触发该状态机上报
           console.info('AVPlayer state playing called.');
-          // this.avPlayer.pause(); // 调用暂停接口暂停播放
+        // this.avPlayer.pause(); // 调用暂停接口暂停播放
           break;
         case 'paused': // pause成功调用后触发该状态机上报
           console.info('AVPlayer state paused called.');
-          // this.avPlayer.play(); // 再次播放接口开始播放
+        // this.avPlayer.play(); // 再次播放接口开始播放
           break;
         case 'completed': // 播放结束后触发该状态机上报
           console.info('AVPlayer state completed called.');
-          // this.avPlayer.stop(); //调用播放结束接口
+        // this.avPlayer.stop(); //调用播放结束接口
           break;
         case 'stopped': // stop接口成功调用后触发该状态机上报
           console.info('AVPlayer state stopped called.');
-          // this.avPlayer.reset(); // 调用reset接口初始化avplayer状态
+        // this.avPlayer.reset(); // 调用reset接口初始化avplayer状态
           break;
         case 'released':
           console.info('AVPlayer state released called.');
@@ -70,30 +75,39 @@ class AVPLAYER {
     console.log('111111111111111111111')
   }
 
-  public stopPlay() {
-    this.avPlayer.reset();
-  }
-
-  // 播放音频
-  public async playAudio(path?: string) {
+  // 结束音频
+  public async stopPlay() {
     this.avPlayer.reset();
     // 延时100ms 防止avPlayer还没进入idle状态就setUrl
     await new Promise((res) => setTimeout(() => res(1), 100))
+  }
+
+  // 暂停音频
+  public pauseAudio() {
+    this.avPlayer.pause();
+  }
+
+  // 播放音频
+  public async playAudio(path?: string, playAudioFrom?: PlayAudioFrom) {
     // 如果path存在则是播放录制音频，否则是播放正常http协议音频
-    if(path) {
-      let fdPath = 'fd://';
-      let res = fs.accessSync(path);
-      if (!res) {
-        console.error(`音频文件不存在：${path}`);
-        return
+    if (path) {
+      if (playAudioFrom === PlayAudioFrom.local) {
+        let fdPath = 'fd://';
+        let res = fs.accessSync(path);
+        if (!res) {
+          console.error(`音频文件不存在：${path}`);
+          return
+        }
+        console.info(`播放音频文件：${path}`)
+        // 打开相应的资源文件地址获取fd
+        let file = await fs.open(path);
+        fdPath = fdPath + '' + file.fd;
+        this.avPlayer.url = fdPath;
+      } else {
+        this.avPlayer.url = path;
       }
-      console.info(`播放音频文件：${path}`)
-      // 打开相应的资源文件地址获取fd
-      let file = await fs.open(path);
-      fdPath = fdPath + '' + file.fd;
-      this.avPlayer.url = fdPath;
     } else {
-      this.avPlayer.url = 'http://music.163.com/song/media/outer/url?id=447925558.mp3';
+      this.avPlayer.play();
     }
   }
 }

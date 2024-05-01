@@ -8,6 +8,7 @@ import { AvPlayer } from "../Utils/AVPlayer"
 struct Index {
   @State musicTitle: string = ''
   @State musicAuthor: string = ''
+  @State isPlaying: boolean = false
 
   build() {
     Column() {
@@ -24,6 +25,7 @@ struct Index {
               })
           }
           .padding({ left: 10, right: 10 })
+
           /* 个人信息 */
           Row() {
             Flex({ direction: FlexDirection.Column }) {
@@ -45,6 +47,7 @@ struct Index {
             .backgroundColor('#ccc2')
           }
           .animation({ duration: 500 })
+
           /* 音乐列表 */
           Column() {
             ForEach(mockData, (item, index) => {
@@ -77,11 +80,12 @@ struct Index {
               .margin({
                 bottom: index === mockData.length - 1 ? 0 : 10
               })
-
               .onClick(async () => {
                 this.musicTitle = item.title
                 this.musicAuthor = item.author
-                AvPlayer.playAudio()
+                this.isPlaying = true
+                await AvPlayer.stopPlay()
+                AvPlayer.playAudio('http://music.163.com/song/media/outer/url?id=447925558.mp3')
               })
             })
           }
@@ -89,7 +93,12 @@ struct Index {
         .padding({ top: 10, bottom: 10, left: 10, right: 10 })
       }
 
-      PlayCard({ musicTitle: $musicTitle, musicAuthor: $musicAuthor })
+      PlayCard({
+        musicTitle: $musicTitle,
+        musicAuthor: $musicAuthor,
+        onClickEvent: () => router.pushUrl({ url: "pages/Player" }),
+        isPlaying: $isPlaying
+      })
     }
   }
 }

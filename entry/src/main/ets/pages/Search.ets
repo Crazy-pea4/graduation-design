@@ -3,7 +3,7 @@ import common from '@ohos.app.ability.common';
 import { checkPermissions, reqPermissionsAndRecord } from '../utils/Permission';
 import { Permissions } from '@ohos.abilityAccessCtrl';
 import { AVRecorder } from '../Utils/AVRecorder'
-import { AvPlayer } from '../Utils/AVPlayer';
+import { AvPlayer, PlayAudioFrom } from '../Utils/AVPlayer';
 import request from '@ohos.request';
 
 // 需要动态申请的权限
@@ -129,10 +129,11 @@ struct SearchPage {
           bottom: { anchor: 'btn1', align: VerticalAlign.Top },
           middle: { anchor: '__container__', align: HorizontalAlign.Center }
         })
-        .onClick(() => {
+        .onClick(async () => {
           if (!this.playIng) {
             // 播放音频
-            AvPlayer.playAudio(audioPath)
+            await AvPlayer.stopPlay()
+            AvPlayer.playAudio(audioPath, PlayAudioFrom.local)
             this.playIng = true
             this.playBtnText = '播放中...'
           } else {

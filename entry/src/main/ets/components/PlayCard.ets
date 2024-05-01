@@ -1,28 +1,47 @@
+import { AvPlayer } from "../Utils/AVPlayer"
+
 @Component
 export struct PlayCard {
+  @Link isPlaying: boolean
   @Link musicTitle: string
   @Link musicAuthor: string
+  onClickEvent: () => void
 
   build() {
-    Flex({alignItems: ItemAlign.End}) {
+    Flex({ alignItems: ItemAlign.End }) {
       Image('1').width(80).height(80).backgroundColor('#aaf9')
 
       Row() {
         Text(`${this.musicTitle ? this.musicTitle + '-' : ''}${this.musicAuthor ? this.musicAuthor : ''}`)
       }
-      .margin({left: 10})
+      .margin({ left: 10 })
       .flexGrow(1)
       .height('100%')
       .backgroundColor("#aac")
 
-      Row() {
-        Text('播')
-      }.height('100%')
+      Flex({justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center}) {
+        Image(this.isPlaying ? $r("app.media.pause") : $r("app.media.play"))
+          .width(20)
+          .height(20)
+      }
+      .width(40)
+      .height('100%')
+      .backgroundColor('#aff')
+      .onClick((e) => {
+        if (this.isPlaying) {
+          AvPlayer.pauseAudio()
+          this.isPlaying = false
+        } else {
+          AvPlayer.playAudio()
+          this.isPlaying = true
+        }
+      })
     }
-    .position({x: 0, y: '92%'})
-    .padding(10)
+    .position({ x: 0, y: '92%' })
+    .padding({top: 10, bottom: 10, left: 10, right: 20})
     .height('8%')
     .width('100%')
     .backgroundColor('#ddd')
+    .onClick(() => this.onClickEvent())
   }
 }
