@@ -1,5 +1,6 @@
 import media from '@ohos.multimedia.media';
 import fs from '@ohos.file.fs';
+import { AppState, StateKey } from './AppStorage';
 
 export enum PlayAudioFrom {
   local = 'local',
@@ -63,6 +64,11 @@ class AVPLAYER {
           console.info('AVPlayer state unknown called.');
           break;
       }
+    })
+
+    this.avPlayer.on('durationUpdate', (duration) => {
+      AppState.setState(StateKey.musicDuration, duration)
+      console.info('durationUpdate success,new duration is :' + duration)
     })
   }
 

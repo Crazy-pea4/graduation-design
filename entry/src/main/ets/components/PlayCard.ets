@@ -2,9 +2,9 @@ import { AvPlayer } from "../Utils/AVPlayer"
 
 @Component
 export struct PlayCard {
-  @Link isPlaying: boolean
   @Link musicTitle: string
   @Link musicAuthor: string
+  @LocalStorageLink('isPlaying') isPlaying: boolean = false
   onClickEvent: () => void
 
   build() {

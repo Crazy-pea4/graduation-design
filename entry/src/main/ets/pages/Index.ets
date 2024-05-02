@@ -2,13 +2,14 @@ import router from '@ohos.router';
 import { mockData } from "../const/mock"
 import { PlayCard } from "../components/PlayCard"
 import { AvPlayer } from "../Utils/AVPlayer"
+import { storage } from "../Utils/LocalStorage"
 
-@Entry
+@Entry(storage)
 @Component
 struct Index {
   @State musicTitle: string = ''
   @State musicAuthor: string = ''
-  @State isPlaying: boolean = false
+  @LocalStorageLink('isPlaying') isPlaying: boolean = false
 
   build() {
     Column() {
@@ -96,8 +97,10 @@ struct Index {
       PlayCard({
         musicTitle: $musicTitle,
         musicAuthor: $musicAuthor,
-        onClickEvent: () => router.pushUrl({ url: "pages/Player" }),
-        isPlaying: $isPlaying
+        onClickEvent: () => router.pushUrl({ url: "pages/Player", params: {
+          title: this.musicTitle,
+          author: this.musicAuthor
+        } }),
       })
     }
   }
