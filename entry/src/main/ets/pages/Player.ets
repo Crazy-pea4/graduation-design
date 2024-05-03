@@ -2,7 +2,7 @@ import router from '@ohos.router';
 import { AppState, StateKey } from '../Utils/AppStorage';
 import { AvPlayer } from '../Utils/AVPlayer';
 import { storage } from '../Utils/LocalStorage';
-import { msTransform } from '../Utils/TimeTransform';
+import { msTransform } from '../Utils/utils';
 
 @Entry(storage)
 @Component

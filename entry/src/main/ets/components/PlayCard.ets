@@ -12,14 +12,14 @@ export struct PlayCard {
       Image('1').width(80).height(80).backgroundColor('#aaf9')
 
       Row() {
-        Text(`${this.musicTitle ? this.musicTitle + '-' : ''}${this.musicAuthor ? this.musicAuthor : ''}`)
+        Text(`${this.musicTitle ? this.musicTitle : '暂无歌手'}-${this.musicAuthor ? this.musicAuthor : '暂无作者'}`)
       }
       .margin({ left: 10 })
       .flexGrow(1)
       .height('100%')
       .backgroundColor("#aac")
 
-      Flex({justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center}) {
+      Flex({ justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
         Image(this.isPlaying ? $r("app.media.pause") : $r("app.media.play"))
           .width(20)
           .height(20)
@@ -38,7 +38,7 @@ export struct PlayCard {
       })
     }
     .position({ x: 0, y: '92%' })
-    .padding({top: 10, bottom: 10, left: 10, right: 20})
+    .padding({ top: 10, bottom: 10, left: 10, right: 20 })
     .height('8%')
     .width('100%')
     .backgroundColor('#ddd')

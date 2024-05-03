@@ -5,13 +5,13 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "storePassword": "0000001AF3D5EA6350BEDC41FDF1179CE445B26CECD7D2A0D426B8DAEB998568160E5F2E3E01E0861888",
-          "certpath": "D:/graduation-design/HarOskey/debugger.cer",
+          "storePassword": "0000001A4BA1CEB0367232BF830F00B5C9752B5037D0E085EFF9ADCEA6669B279EECADABB5EAFC854014",
+          "certpath": "/Users/ericmye/DevEcoStudioProjects/music_share_platform/HarOskey/debugger.cer",
           "keyAlias": "debugger",
-          "keyPassword": "0000001A155D239500A649EE0F8E65F3EC73C9CD2900623A54D8204D471E088A6536678A9CBC3766BE62",
-          "profile": "D:/graduation-design/HarOskey/debuggerDebug.p7b",
+          "keyPassword": "0000001A73293DB41F88A5188671D2FC2E14B3BC91BFDAA9A3F6B2ECC778A5A7DF903A19CA8E5B937172",
+          "profile": "/Users/ericmye/DevEcoStudioProjects/music_share_platform/HarOskey/debuggerDebug.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "D:/graduation-design/HarOskey/debugger.p12"
+          "storeFile": "/Users/ericmye/DevEcoStudioProjects/music_share_platform/HarOskey/debugger.p12"
         }
       }
     ],

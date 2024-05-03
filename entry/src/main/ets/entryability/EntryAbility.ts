@@ -1,7 +1,7 @@
 import UIAbility from '@ohos.app.ability.UIAbility';
 import hilog from '@ohos.hilog';
 import window from '@ohos.window';
-import { AvPlayer } from "../Utils/AVPlayer"
+import { AvPlayer } from "../Utils/AVPlayer";
 
 export default class EntryAbility extends UIAbility {
   onCreate(want, launchParam) {

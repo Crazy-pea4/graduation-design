@@ -1,57 +1,21 @@
-let storage = new LocalStorage({ countStorage: 1 });
+PersistentStorage.PersistProp('aProp', 47);
 
+@Entry
 @Component
-struct Child {
-  // 子组件实例的名字
-  label: string = 'no name';
-  // 和LocalStorage中“countStorage”的双向绑定数据
-  @LocalStorageLink('countStorage') playCountLink: number = 0;
+struct Index {
+  @State message: string = 'Hello World'
+  @StorageLink('aProp') aProp: number = 48
 
   build() {
     Row() {
-      Text(this.label)
-        .width(50).height(60).fontSize(12)
-      Text(`playCountLink ${this.playCountLink}: inc by 1`)
-        .onClick(() => {
-          this.playCountLink += 1;
-        })
-        .width(200).height(60).fontSize(12)
-    }.width(300).height(60)
-  }
-}
-
-@Entry(storage)
-@Component
-struct Parent {
-  @LocalStorageLink('countStorage') playCount: number = 0;
-
-  build() {
-    Column() {
-      Row() {
-        Text('Parent')
-          .width(50).height(60).fontSize(12)
-        Text(`playCount ${this.playCount} dec by 1`)
+      Column() {
+        Text(this.message)
+        // 应用退出时会保存当前结果。重新启动后，会显示上一次的保存结果
+        Text(`${this.aProp}`)
           .onClick(() => {
-            this.playCount -= 1;
+            this.aProp += 1;
           })
-          .width(250).height(60).fontSize(12)
-      }.width(300).height(60)
-
-      Row() {
-        Text('LocalStorage')
-          .width(50).height(60).fontSize(12)
-        Text(`countStorage ${this.playCount} incr by 1`)
-          .onClick(() => {
-            storage.set<number>('countStorage', 1 + storage.get<number>('countStorage'));
-          })
-          .width(250).height(60).fontSize(12)
-      }.width(300).height(60)
-
-      Child({ label: 'ChildA' })
-      Child({ label: 'ChildB' })
-
-      Text(`playCount in LocalStorage for debug ${storage.get<number>('countStorage')}`)
-        .width(300).height(60).fontSize(12)
+      }
     }
   }
 }

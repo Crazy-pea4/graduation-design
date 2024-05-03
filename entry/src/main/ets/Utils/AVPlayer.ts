@@ -1,6 +1,7 @@
 import media from '@ohos.multimedia.media';
 import fs from '@ohos.file.fs';
 import { AppState, StateKey } from './AppStorage';
+import { sleep } from './utils';
 
 export enum PlayAudioFrom {
   local = 'local',
@@ -85,7 +86,7 @@ class AVPLAYER {
   public async stopPlay() {
     this.avPlayer.reset();
     // 延时100ms 防止avPlayer还没进入idle状态就setUrl
-    await new Promise((res) => setTimeout(() => res(1), 100))
+    await sleep();
   }
 
   // 暂停音频
