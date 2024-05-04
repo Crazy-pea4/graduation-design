@@ -1,15 +1,17 @@
 import router from '@ohos.router';
-import { mockData } from "../../const/mock"
+import { MockData, mockData } from "../../const/mock"
 import { PlayCard } from "../../components/PlayCard"
 import { AvPlayer } from "../../Utils/AVPlayer"
 import { controller } from "../Index"
+import { PersistentKey, PersistentState } from '../../Utils/AppStorage';
 
 @Component
 export struct Home {
   @State musicTitle: string = ''
   @State musicAuthor: string = ''
-  @StorageLink('token') token: string = ''
   @LocalStorageLink('isPlaying') isPlaying: boolean = false
+  @StorageLink('token') token: string = ''
+  @StorageLink('musicList') musicList: MockData[] = []
 
   build() {
     Column() {
@@ -20,7 +22,7 @@ export struct Home {
             Search({ placeholder: '查找音乐' })
               .animation({ duration: 500 })
               .searchButton('搜索')
-              .onSubmit(async () => {
+              .onSubmit(() => {
                 router.pushUrl({ url: 'pages/Search' })
                 console.log('123123')
               })
@@ -61,7 +63,7 @@ export struct Home {
 
           /* 音乐列表 */
           Column() {
-            ForEach(mockData, (item, index) => {
+            ForEach(mockData, (item: MockData, index) => {
               Row() {
                 Column() {
                   Row() {
@@ -92,16 +94,24 @@ export struct Home {
                 bottom: index === mockData.length - 1 ? 0 : 10
               })
               .onClick(async () => {
+                const fIndex = this.musicList.findIndex((i) => i.id === item.id)
+                if (fIndex !== -1) {
+                  // 如果 当前点击的音乐 已经在 播放列表里面
+                  this.musicList.splice(fIndex, 1)
+                  this.musicList.push(item)
+                }
+                this.musicList.push(item)
+                PersistentState.getStorage(PersistentKey.musicList)
                 this.musicTitle = item.title
                 this.musicAuthor = item.author
                 this.isPlaying = true
                 await AvPlayer.stopPlay()
-                AvPlayer.playAudio('http://music.163.com/song/media/outer/url?id=447925558.mp3')
+                AvPlayer.playAudio(item.url)
               })
             })
           }
         }
-        .padding({ top: 10, bottom: 10, left: 10, right: 10 })
+        .padding({ top: 10, bottom: 100, left: 10, right: 10 })
       }
 
       PlayCard({

@@ -1,5 +1,6 @@
 export enum PersistentKey {
-  token = 'token'
+  token = 'token',
+  musicList = 'musicList'
 }
 
 export enum StateKey {
@@ -31,7 +32,7 @@ class PERSISTENTSTATE {
 
   public getStorage<T>(key: string): T {
     const res = AppStorage.Get(key) as T
-    console.log(key, res)
+    console.log(`AppStorage.Get: ${key}, res: ${res}`)
     return res;
   }
 

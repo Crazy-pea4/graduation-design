@@ -1,5 +1,6 @@
 import { PersistentKey, PersistentState } from '../Utils/AppStorage'
 import { storage } from "../Utils/LocalStorage"
+import { Ground } from './Tabs/Ground'
 
 import { Home } from "./Tabs/Home"
 import { Mine } from "./Tabs/Mine"
@@ -7,6 +8,7 @@ import { Mine } from "./Tabs/Mine"
 export const controller: TabsController = new TabsController()
 
 PersistentState.setStorage(PersistentKey.token, '')
+PersistentState.setStorage(PersistentKey.musicList, [])
 
 @Entry(storage)
 @Component
@@ -35,8 +37,12 @@ struct Index {
         }.tabBar(this.TabBarBuilder('首页', 0))
 
         TabContent() {
+          Ground();
+        }.tabBar(this.TabBarBuilder('广场', 1))
+
+        TabContent() {
           Mine();
-        }.tabBar(this.TabBarBuilder('我的', 1))
+        }.tabBar(this.TabBarBuilder('我的', 2))
       }
       .onChange((index: number) => {
           this.currentIndex = index
