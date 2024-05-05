@@ -2,8 +2,8 @@ import { AvPlayer } from "../Utils/AVPlayer"
 
 @Component
 export struct PlayCard {
-  @Link musicTitle: string
-  @Link musicAuthor: string
+  @LocalStorageLink('musicTitle') musicTitle: string = ''
+  @LocalStorageLink('musicAuthor') musicAuthor: string = ''
   @LocalStorageLink('isPlaying') isPlaying: boolean = false
   onClickEvent: () => void
 

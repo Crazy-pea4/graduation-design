@@ -1,5 +1,6 @@
 import router from '@ohos.router';
-import { AppState, StateKey } from '../Utils/AppStorage';
+import { MockData } from '../const/mock';
+import { AppState, PersistentKey, StateKey } from '../Utils/AppStorage';
 import { AvPlayer } from '../Utils/AVPlayer';
 import { storage } from '../Utils/LocalStorage';
 import { msTransform } from '../Utils/utils';
@@ -8,15 +9,19 @@ import { msTransform } from '../Utils/utils';
 @Component
 struct Player {
   @State angleA: number = 0
-  @State title: string = ''
-  @State author: string = ''
+  @LocalStorageLink('musicTitle') musicTitle: string = ''
+  @LocalStorageLink('musicAuthor') musicAuthor: string = ''
+  @LocalStorageLink('musicId') musicId: number = 0
   @LocalStorageLink('isPlaying') isPlaying: boolean = false
   @State duration: string = '00:00'
+  // 初始时代表musicList的倒数第1位
+  @State mustLastIndex: number = JSON.parse(AppState.getState(PersistentKey.musicList)).length - 1
 
   onPageShow() {
     const params = router.getParams() || {};
-    this.title = params['title'] || '暂无歌曲'
-    this.author = params['author'] || '暂无作者'
+    this.musicTitle = params['title'] || '暂无歌曲'
+    this.musicAuthor = params['author'] || '暂无作者'
+    this.musicId = params['musicId'] || -1
 
     /* 音频总时长转换 */
     const ms = AppState.getState<number>(StateKey.musicDuration) || 0
@@ -55,10 +60,10 @@ struct Player {
 
       Flex({ justifyContent: FlexAlign.SpaceBetween, alignItems: ItemAlign.Center }) {
         Flex({direction: FlexDirection.Column}) {
-          Text(this.title)
+          Text(this.musicTitle)
             .margin({ bottom: 8 })
             .fontWeight(700)
-          Text(this.author)
+          Text(this.musicAuthor)
             .fontSize(15)
         }
         Text(this.duration)
@@ -88,6 +93,17 @@ struct Player {
 
       Flex({ justifyContent: FlexAlign.SpaceAround, alignItems: ItemAlign.Center }) {
         Text('前一首')
+          .onClick(async () => {
+            const musicList = JSON.parse(AppState.getState(PersistentKey.musicList)) as MockData[]
+            if(this.mustLastIndex <= 0) return
+            this.mustLastIndex--
+            const previousMusic = musicList[this.mustLastIndex]
+
+            await AvPlayer.stopPlay()
+            this.musicTitle = previousMusic.title
+            this.musicAuthor = previousMusic.author
+            AvPlayer.playAudio(previousMusic.url)
+          })
         Text(this.isPlaying ? '暂停' : '播放')
           .onClick(() => {
             if (this.isPlaying) {
@@ -99,6 +115,17 @@ struct Player {
             }
           })
         Text('后一首')
+          .onClick(async () => {
+            const musicList = JSON.parse(AppState.getState(PersistentKey.musicList)) as MockData[]
+            if(this.mustLastIndex >= musicList.length - 1) return
+            this.mustLastIndex++
+            const nextMusic = musicList[this.mustLastIndex]
+
+            await AvPlayer.stopPlay()
+            this.musicTitle = nextMusic.title
+            this.musicAuthor = nextMusic.author
+            AvPlayer.playAudio(nextMusic.url)
+          })
       }
       .margin({ top: 100 })
       .width('100%')

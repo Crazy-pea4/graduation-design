@@ -3,15 +3,15 @@ import { MockData, mockData } from "../../const/mock"
 import { PlayCard } from "../../components/PlayCard"
 import { AvPlayer } from "../../Utils/AVPlayer"
 import { controller } from "../Index"
-import { PersistentKey, PersistentState } from '../../Utils/AppStorage';
+import { AppState, PersistentKey, PersistentState } from '../../Utils/AppStorage';
 
 @Component
 export struct Home {
-  @State musicTitle: string = ''
-  @State musicAuthor: string = ''
+  @LocalStorageLink('musicId') musicId: number = 0
+  @LocalStorageLink('musicTitle') musicTitle: string = ''
+  @LocalStorageLink('musicAuthor') musicAuthor: string = ''
   @LocalStorageLink('isPlaying') isPlaying: boolean = false
   @StorageLink('token') token: string = ''
-  @StorageLink('musicList') musicList: MockData[] = []
 
   build() {
     Column() {
@@ -36,7 +36,7 @@ export struct Home {
               Row() {
                 Button(Boolean(this.token) ? '个人中心' : '登录').onClick(() => {
                   if (Boolean(this.token)) {
-                    controller.changeIndex(1)
+                    controller.changeIndex(2)
                   } else {
                     router.pushUrl({ url: 'pages/Login' })
                   }
@@ -94,16 +94,18 @@ export struct Home {
                 bottom: index === mockData.length - 1 ? 0 : 10
               })
               .onClick(async () => {
-                const fIndex = this.musicList.findIndex((i) => i.id === item.id)
+                const musicList = JSON.parse(AppState.getState(PersistentKey.musicList))
+                const fIndex = musicList.findIndex((i) => i.id === item.id)
                 if (fIndex !== -1) {
                   // 如果 当前点击的音乐 已经在 播放列表里面
-                  this.musicList.splice(fIndex, 1)
-                  this.musicList.push(item)
+                  musicList.splice(fIndex, 1)
                 }
-                this.musicList.push(item)
-                PersistentState.getStorage(PersistentKey.musicList)
+                musicList.push(item)
+                AppState.setState(PersistentKey.musicList, JSON.stringify(musicList))
+
                 this.musicTitle = item.title
                 this.musicAuthor = item.author
+                this.musicId = item.id
                 this.isPlaying = true
                 await AvPlayer.stopPlay()
                 AvPlayer.playAudio(item.url)
@@ -115,11 +117,10 @@ export struct Home {
       }
 
       PlayCard({
-        musicTitle: $musicTitle,
-        musicAuthor: $musicAuthor,
         onClickEvent: () => router.pushUrl({ url: "pages/Player", params: {
           title: this.musicTitle,
-          author: this.musicAuthor
+          author: this.musicAuthor,
+          musicId: this.musicId
         } }),
       })
     }
