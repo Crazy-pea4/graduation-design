@@ -1,3 +1,6 @@
+import promptAction from '@ohos.promptAction'
+import { ServerData } from './HttpRequest'
+
 /********************************/
 /* 单位: 毫秒 */
 export async function sleep(time: number = 100) {
@@ -22,5 +25,12 @@ export function msTransform(ms: number) {
   }
 
   return `${strMin}:${strSec}`
+}
+/********************************/
+
+/********************************/
+// NOTE: A value less than 1500 is automatically changed to 1500. The maximum value is 10000ms.
+export function showToast(message: string, duration = 1500) {
+  promptAction.showToast({ message, duration })
 }
 /********************************/

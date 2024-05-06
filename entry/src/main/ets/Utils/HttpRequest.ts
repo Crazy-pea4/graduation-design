@@ -1,18 +1,22 @@
 // HttpUtil.ets
 import { BASE_URL } from '../const/index';
 import http from '@ohos.net.http';
+import { showToast } from './utils';
+
+export interface ServerData {
+  [key: string]: string | number,
+  code: number,
+  data: any,
+  message: string
+}
 
 async function base(url: string, method: http.RequestMethod, extraData?: any) {
   url = BASE_URL + url
-  let httpRequest = http.createHttp();
+  const httpRequest = http.createHttp();
   var header = {
     'Content-Type': 'application/json',
   }
-  let serverData: {
-    code,
-    data: any,
-    message: string
-  } = { code: 0, data: '', message: '' };
+  let serverData: ServerData = { code: 0, data: '', message: '' };
 
   try {
     let res = await httpRequest.request(url, {
@@ -23,12 +27,14 @@ async function base(url: string, method: http.RequestMethod, extraData?: any) {
     // 处理数据，并返回
     if (res.responseCode === 200) {
       // 获取返回数据
-      serverData = JSON.parse(res.result as string);;
+      serverData = JSON.parse(res.result as string);
+      ;
     } else {
       serverData = JSON.parse(res.result as string);
     }
 
     console.info(JSON.stringify(serverData), 'httpRequestData success')
+    showToast(serverData.message)
     return serverData;
   } catch (err) {
     serverData.message = '调用接口失败';
@@ -38,7 +44,7 @@ async function base(url: string, method: http.RequestMethod, extraData?: any) {
   }
 }
 
-export const httpRequestGet = async (url: string) => await base(url, http.RequestMethod.GET)
+export const httpRequestGet = async (url: string, params: any) => await base(url, http.RequestMethod.GET, params)
 
 export const httpRequestPost = async (url: string, params: any) => await base(url, http.RequestMethod.POST, params)
 

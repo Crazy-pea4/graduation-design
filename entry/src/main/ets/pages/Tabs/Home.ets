@@ -3,7 +3,7 @@ import { MockData, mockData } from "../../const/mock"
 import { PlayCard } from "../../components/PlayCard"
 import { AvPlayer } from "../../Utils/AVPlayer"
 import { controller } from "../Index"
-import { AppState, PersistentKey, PersistentState } from '../../Utils/AppStorage';
+import { AppState, PersistentKey } from '../../Utils/AppStorage';
 
 @Component
 export struct Home {
@@ -12,6 +12,7 @@ export struct Home {
   @LocalStorageLink('musicAuthor') musicAuthor: string = ''
   @LocalStorageLink('isPlaying') isPlaying: boolean = false
   @StorageLink('token') token: string = ''
+  @StorageLink('nickname') nickname: string = ''
 
   build() {
     Column() {
@@ -34,16 +35,17 @@ export struct Home {
             Flex({ direction: FlexDirection.Column }) {
               /* 个人卡片 */
               Row() {
-                Button(Boolean(this.token) ? '个人中心' : '登录').onClick(() => {
-                  if (Boolean(this.token)) {
-                    controller.changeIndex(2)
-                  } else {
-                    router.pushUrl({ url: 'pages/Login' })
-                  }
+                Image($r('app.media.defaultHeaderIcon'))
+                  .width(40)
+                  .height(40)
+                  .borderRadius(40)
+                  .margin({ right: 10 })
+                  .visibility(this.token ? Visibility.Visible : Visibility.None)
+                Text(this.nickname)
+                Button('登录').onClick(() => {
+                  router.pushUrl({ url: 'pages/Login' })
                 })
-                Button('写入token').onClick(() => {
-                  this.token = '123'
-                })
+                  .visibility(this.token ? Visibility.None : Visibility.Visible)
                 Button('注销').onClick(() => {
                   this.token = ''
                 })

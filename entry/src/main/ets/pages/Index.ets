@@ -9,6 +9,7 @@ export const controller: TabsController = new TabsController()
 
 PersistentState.setStorage(PersistentKey.token, '')
 PersistentState.setStorage(PersistentKey.musicList, [])
+PersistentState.setStorage(PersistentKey.nickname, '')
 
 @Entry(storage)
 @Component
@@ -34,6 +35,7 @@ struct Index {
       Tabs({barPosition: BarPosition.End, controller}) {
         TabContent() {
           Home();
+          // Mine();
         }.tabBar(this.TabBarBuilder('首页', 0))
 
         TabContent() {
