@@ -2,6 +2,7 @@
 import { BASE_URL } from '../const/index';
 import http from '@ohos.net.http';
 import { showToast } from './utils';
+import { AppState } from './AppStorage';
 
 export interface ServerData {
   [key: string]: string | number,
@@ -15,6 +16,7 @@ async function base(url: string, method: http.RequestMethod, extraData?: any) {
   const httpRequest = http.createHttp();
   var header = {
     'Content-Type': 'application/json',
+    'token': AppState.getState('token') || ''
   }
   let serverData: ServerData = { code: 0, data: '', message: '' };
 
@@ -44,7 +46,7 @@ async function base(url: string, method: http.RequestMethod, extraData?: any) {
   }
 }
 
-export const httpRequestGet = async (url: string, params: any) => await base(url, http.RequestMethod.GET, params)
+export const httpRequestGet = async (url: string, params?: any) => await base(url, http.RequestMethod.GET, params)
 
 export const httpRequestPost = async (url: string, params: any) => await base(url, http.RequestMethod.POST, params)
 

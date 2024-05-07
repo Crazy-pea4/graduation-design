@@ -2,14 +2,15 @@ import { AvPlayer } from "../Utils/AVPlayer"
 
 @Component
 export struct PlayCard {
-  @LocalStorageLink('musicTitle') musicTitle: string = ''
-  @LocalStorageLink('musicAuthor') musicAuthor: string = ''
-  @LocalStorageLink('isPlaying') isPlaying: boolean = false
+  @StorageLink('musicTitle') musicTitle: string = ''
+  @StorageLink('musicAuthor') musicAuthor: string = ''
+  @StorageLink('musicPicUrl') musicPicUrl: string = ''
+  @StorageLink('isPlaying') isPlaying: boolean = false
   onClickEvent: () => void
 
   build() {
     Flex({ alignItems: ItemAlign.End }) {
-      Image('1').width(80).height(80).backgroundColor('#aaf9')
+      Image(this.musicPicUrl || "").width(80).height(80).backgroundColor('#aaf9')
 
       Row() {
         Text(`${this.musicTitle ? this.musicTitle : '暂无歌手'}-${this.musicAuthor ? this.musicAuthor : '暂无作者'}`)

@@ -1,4 +1,3 @@
-import router from '@ohos.router';
 import { MockData } from '../const/mock';
 import { AppState, PersistentKey, StateKey } from '../Utils/AppStorage';
 import { AvPlayer } from '../Utils/AVPlayer';
@@ -9,20 +8,15 @@ import { msTransform } from '../Utils/utils';
 @Component
 struct Player {
   @State angleA: number = 0
-  @LocalStorageLink('musicTitle') musicTitle: string = ''
-  @LocalStorageLink('musicAuthor') musicAuthor: string = ''
-  @LocalStorageLink('musicId') musicId: number = 0
-  @LocalStorageLink('isPlaying') isPlaying: boolean = false
+  @StorageLink('musicTitle') musicTitle: string = ''
+  @StorageLink('musicAuthor') musicAuthor: string = ''
+  @StorageLink('musicPicUrl') musicPicUrl: string = ''
+  @StorageLink('isPlaying') isPlaying: boolean = false
   @State duration: string = '00:00'
   // 初始时代表musicList的倒数第1位
   @State mustLastIndex: number = JSON.parse(AppState.getState(PersistentKey.musicList)).length - 1
 
   onPageShow() {
-    const params = router.getParams() || {};
-    this.musicTitle = params['title'] || '暂无歌曲'
-    this.musicAuthor = params['author'] || '暂无作者'
-    this.musicId = params['musicId'] || -1
-
     /* 音频总时长转换 */
     const ms = AppState.getState<number>(StateKey.musicDuration) || 0
     const res = msTransform(ms)
@@ -42,9 +36,7 @@ struct Player {
   build() {
     Flex({ justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center, direction: FlexDirection.Column }) {
       Flex({ justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
-        Column() {
-          Text('123123')
-        }
+        Image(this.musicPicUrl || "")
         .width(250)
         .height(250)
         .borderRadius(200)
@@ -100,7 +92,7 @@ struct Player {
             const previousMusic = musicList[this.mustLastIndex]
 
             await AvPlayer.stopPlay()
-            this.musicTitle = previousMusic.title
+            this.musicTitle = previousMusic.name
             this.musicAuthor = previousMusic.author
             AvPlayer.playAudio(previousMusic.url)
           })
@@ -122,7 +114,7 @@ struct Player {
             const nextMusic = musicList[this.mustLastIndex]
 
             await AvPlayer.stopPlay()
-            this.musicTitle = nextMusic.title
+            this.musicTitle = nextMusic.name
             this.musicAuthor = nextMusic.author
             AvPlayer.playAudio(nextMusic.url)
           })

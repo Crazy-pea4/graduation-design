@@ -1,5 +1,5 @@
 import router from '@ohos.router'
-import { httpRequestGet, httpRequestPost } from '../Utils/HttpRequest'
+import { httpRequestPost } from '../Utils/HttpRequest'
 
 @Entry
 @Component
