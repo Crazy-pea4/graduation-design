@@ -1,18 +1,24 @@
-import { PersistentKey, PersistentState } from '../Utils/AppStorage'
-import { storage } from "../Utils/LocalStorage"
-import { Home } from "./Tabs/Home"
-import { Ground } from './Tabs/Ground'
+import router from "@ohos.router"
 
-PersistentState.setStorage(PersistentKey.token, '')
-PersistentState.setStorage(PersistentKey.musicList, [])
-PersistentState.setStorage(PersistentKey.nickname, '')
+export const controller: TabsController = new TabsController()
 
-@Entry(storage)
+@Entry
 @Component
-struct Index {
+struct Mine {
+  @StorageLink('token') token: string = ''
   @State fontColor: string = '#182431'
   @State selectedFontColor: string = '#007DFF'
   @State currentIndex: number = 0
+
+  onPageShow() {
+    const params = router.getParams()
+    if(params['mine']) {
+      controller.changeIndex(0)
+    }
+    if(params['download']) {
+      controller.changeIndex(1)
+    }
+  }
 
   @Builder
   TabBarBuilder(name: string, index: number) {
@@ -29,14 +35,14 @@ struct Index {
 
   build() {
     Column() {
-      Tabs({ barPosition: BarPosition.End }) {
+      Tabs({ barPosition: BarPosition.Start, controller }) {
         TabContent() {
-          Home();
-        }.tabBar(this.TabBarBuilder('首页', 0))
+          Text('喜欢')
+        }.tabBar(this.TabBarBuilder('喜欢', 0))
 
         TabContent() {
-          Ground();
-        }.tabBar(this.TabBarBuilder('广场', 1))
+          Text('下载')
+        }.tabBar(this.TabBarBuilder('下载', 1))
       }
       .onChange((index: number) => {
         this.currentIndex = index

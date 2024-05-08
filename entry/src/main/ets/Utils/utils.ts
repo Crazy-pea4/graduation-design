@@ -34,3 +34,29 @@ export function showToast(message: string, duration = 1500) {
   promptAction.showToast({ message, duration })
 }
 /********************************/
+
+export function showDialog(cb: () => void) {
+  promptAction.showDialog({
+    title: '确认注销吗？',
+    message: '',
+    buttons: [
+      {
+        text: '注销',
+        color: '#000000',
+      },
+      {
+        text: '取消',
+        color: '#000000',
+      }
+    ],
+  })
+    .then(data => {
+      if(data.index === 0) {
+        cb()
+      }
+      console.info('showDialog success, click button: ' + data.index);
+    })
+    .catch(err => {
+      console.info('showDialog error: ' + err);
+    })
+}

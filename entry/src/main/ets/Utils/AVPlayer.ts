@@ -2,6 +2,7 @@ import media from '@ohos.multimedia.media';
 import fs from '@ohos.file.fs';
 import { AppState, StateKey } from './AppStorage';
 import { sleep } from './utils';
+import { msTransform } from '../Utils/utils';
 
 export enum PlayAudioFrom {
   local = 'local',
@@ -68,7 +69,9 @@ class AVPLAYER {
     })
 
     this.avPlayer.on('durationUpdate', (duration) => {
-      AppState.setState(StateKey.musicDuration, duration)
+      /* 音频总时长转换 */
+      const res = msTransform(duration)
+      AppState.setState(StateKey.musicDuration, res)
       console.info('durationUpdate success,new duration is :' + duration)
     })
   }

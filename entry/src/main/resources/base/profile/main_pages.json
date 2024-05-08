@@ -3,6 +3,7 @@
     "pages/Index",
     "pages/Search",
     "pages/Login",
-    "pages/Player"
+    "pages/Player",
+    "pages/Mine"
   ]
 }

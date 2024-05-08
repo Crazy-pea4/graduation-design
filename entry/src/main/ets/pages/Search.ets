@@ -1,6 +1,7 @@
 import router from '@ohos.router';
 import { MusicItem } from '../components/MusicItem';
 import { PlayCard } from '../components/PlayCard';
+import { SearchBox } from '../components/SearchBox';
 import { MList } from "../type/index"
 import { httpRequestGet } from '../Utils/HttpRequest';
 
@@ -19,6 +20,8 @@ struct SearchPage {
   build() {
     Column() {
       Scroll() {
+        /* 主搜索框 */
+        SearchBox()
         Flex({ direction: FlexDirection.Column }) {
           ForEach(this.list, (item: MList, index) => {
             MusicItem({

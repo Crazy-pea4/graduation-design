@@ -3,6 +3,7 @@ import { AppState, PersistentKey, StateKey } from '../Utils/AppStorage';
 import { AvPlayer } from '../Utils/AVPlayer';
 import { storage } from '../Utils/LocalStorage';
 import { msTransform } from '../Utils/utils';
+import { MList } from "../type/index"
 
 @Entry(storage)
 @Component
@@ -12,15 +13,14 @@ struct Player {
   @StorageLink('musicAuthor') musicAuthor: string = ''
   @StorageLink('musicPicUrl') musicPicUrl: string = ''
   @StorageLink('isPlaying') isPlaying: boolean = false
-  @State duration: string = '00:00'
+  @StorageLink('musicDuration') musicDuration: string = '00:00'
   // 初始时代表musicList的倒数第1位
   @State mustLastIndex: number = JSON.parse(AppState.getState(PersistentKey.musicList)).length - 1
 
   onPageShow() {
-    /* 音频总时长转换 */
-    const ms = AppState.getState<number>(StateKey.musicDuration) || 0
-    const res = msTransform(ms)
-    this.duration = res
+    // const ms = AppState.getState<number>(StateKey.musicDuration) || 0
+    // const res = msTransform(ms)
+    // this.duration = res
 
     if (this.isPlaying) {
       animateTo({
@@ -52,13 +52,13 @@ struct Player {
 
       Flex({ justifyContent: FlexAlign.SpaceBetween, alignItems: ItemAlign.Center }) {
         Flex({direction: FlexDirection.Column}) {
-          Text(this.musicTitle)
+          Text(this.musicTitle || '暂无标题')
             .margin({ bottom: 8 })
             .fontWeight(700)
-          Text(this.musicAuthor)
+          Text(this.musicAuthor || '暂无作者')
             .fontSize(15)
         }
-        Text(this.duration)
+        Text(this.musicDuration)
       }
       .margin({ top: 40 })
       .width('100%')
@@ -84,9 +84,11 @@ struct Player {
       }
 
       Flex({ justifyContent: FlexAlign.SpaceAround, alignItems: ItemAlign.Center }) {
-        Text('前一首')
+        Image($r("app.media.previous_icon"))
+          .width(50)
+          .height(50)
           .onClick(async () => {
-            const musicList = JSON.parse(AppState.getState(PersistentKey.musicList)) as MockData[]
+            const musicList = JSON.parse(AppState.getState(PersistentKey.musicList)) as MList[]
             if(this.mustLastIndex <= 0) return
             this.mustLastIndex--
             const previousMusic = musicList[this.mustLastIndex]
@@ -94,9 +96,13 @@ struct Player {
             await AvPlayer.stopPlay()
             this.musicTitle = previousMusic.name
             this.musicAuthor = previousMusic.author
+            this.musicPicUrl = previousMusic.picUrl
+            this.isPlaying = true
             AvPlayer.playAudio(previousMusic.url)
           })
-        Text(this.isPlaying ? '暂停' : '播放')
+        Image(this.isPlaying ? $r("app.media.main_pause") : $r("app.media.main_play"))
+          .width(50)
+          .height(50)
           .onClick(() => {
             if (this.isPlaying) {
               AvPlayer.pauseAudio()
@@ -106,9 +112,11 @@ struct Player {
               this.isPlaying = true
             }
           })
-        Text('后一首')
+        Image($r("app.media.next_icon"))
+          .width(50)
+          .height(50)
           .onClick(async () => {
-            const musicList = JSON.parse(AppState.getState(PersistentKey.musicList)) as MockData[]
+            const musicList = JSON.parse(AppState.getState(PersistentKey.musicList)) as MList[]
             if(this.mustLastIndex >= musicList.length - 1) return
             this.mustLastIndex++
             const nextMusic = musicList[this.mustLastIndex]
@@ -116,6 +124,8 @@ struct Player {
             await AvPlayer.stopPlay()
             this.musicTitle = nextMusic.name
             this.musicAuthor = nextMusic.author
+            this.musicPicUrl = nextMusic.picUrl
+            this.isPlaying = true
             AvPlayer.playAudio(nextMusic.url)
           })
       }
