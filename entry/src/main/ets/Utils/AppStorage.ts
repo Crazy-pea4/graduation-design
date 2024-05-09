@@ -5,7 +5,9 @@ export enum PersistentKey {
 }
 
 export enum StateKey {
+  duration = 'duration',
   musicDuration = 'musicDuration',
+  musicTime = 'musicTime'
 }
 
 class APPSTATE {

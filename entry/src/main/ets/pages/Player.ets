@@ -9,11 +9,15 @@ import { MList } from "../type/index"
 @Component
 struct Player {
   @State angleA: number = 0
+  @State isSliderDrag: boolean = false
+  @State dragCurrentPercent: number = 0
   @StorageLink('musicTitle') musicTitle: string = ''
   @StorageLink('musicAuthor') musicAuthor: string = ''
   @StorageLink('musicPicUrl') musicPicUrl: string = ''
   @StorageLink('isPlaying') isPlaying: boolean = false
   @StorageLink('musicDuration') musicDuration: string = '00:00'
+  @StorageLink('duration') duration: number = 0
+  @StorageLink('musicTime') musicTime: number = 0
   // 初始时代表musicList的倒数第1位
   @State mustLastIndex: number = JSON.parse(AppState.getState(PersistentKey.musicList)).length - 1
 
@@ -37,27 +41,28 @@ struct Player {
     Flex({ justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center, direction: FlexDirection.Column }) {
       Flex({ justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
         Image(this.musicPicUrl || "")
-        .width(250)
-        .height(250)
-        .borderRadius(200)
-        .backgroundColor("#aff")
-        .animation({ duration: 2000 })
-        .rotate({
-          angle: this.angleA
-        })
+          .width(250)
+          .height(250)
+          .borderRadius(200)
+          .backgroundColor("#aff")
+          .animation({ duration: 2000 })
+          .rotate({
+            angle: this.angleA
+          })
       }
       .width('100%')
       .height('330vp')
       .backgroundColor("#aadf")
 
       Flex({ justifyContent: FlexAlign.SpaceBetween, alignItems: ItemAlign.Center }) {
-        Flex({direction: FlexDirection.Column}) {
+        Flex({ direction: FlexDirection.Column }) {
           Text(this.musicTitle || '暂无标题')
             .margin({ bottom: 8 })
             .fontWeight(700)
           Text(this.musicAuthor || '暂无作者')
             .fontSize(15)
         }
+
         Text(this.musicDuration)
       }
       .margin({ top: 40 })
@@ -66,17 +71,27 @@ struct Player {
       .backgroundColor("#ffdd")
 
       Column() {
-        Slider()
+        Slider({ value: this.isSliderDrag ? this.dragCurrentPercent : (this.musicTime / this.duration * 100) })
           .selectedColor('black')
           .trackThickness(3)
           .onChange((progress, mode) => {
             switch (mode) {
-              case SliderChangeMode.Begin:
-                console.log('asdasd')
+              case SliderChangeMode.Begin: {
+                // 为了防止拖动的时候还在不断计算当前播放百分比，造成停止拖动时滑点会闪现的问题
+                this.isSliderDrag = true
+                this.dragCurrentPercent = this.musicTime / this.duration * 100
                 break;
+              }
 
-              case SliderChangeMode.End:
+              case SliderChangeMode.Click:
+              case SliderChangeMode.End: {
+                this.dragCurrentPercent = this.musicTime / this.duration * 100
+                console.log(progress + 'progress111')
+                const seekNum = (progress / 100) * this.duration
+                AvPlayer.seekAudio(seekNum)
+                this.isSliderDrag = false
                 break;
+              }
               default:
                 break;
             }
@@ -89,7 +104,7 @@ struct Player {
           .height(50)
           .onClick(async () => {
             const musicList = JSON.parse(AppState.getState(PersistentKey.musicList)) as MList[]
-            if(this.mustLastIndex <= 0) return
+            if (this.mustLastIndex <= 0) return
             this.mustLastIndex--
             const previousMusic = musicList[this.mustLastIndex]
 
@@ -117,7 +132,7 @@ struct Player {
           .height(50)
           .onClick(async () => {
             const musicList = JSON.parse(AppState.getState(PersistentKey.musicList)) as MList[]
-            if(this.mustLastIndex >= musicList.length - 1) return
+            if (this.mustLastIndex >= musicList.length - 1) return
             this.mustLastIndex++
             const nextMusic = musicList[this.mustLastIndex]
 

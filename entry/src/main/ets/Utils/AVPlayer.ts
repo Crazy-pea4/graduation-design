@@ -10,7 +10,7 @@ export enum PlayAudioFrom {
 }
 
 class AVPLAYER {
-  public avPlayer;
+  public avPlayer: media.AVPlayer;
 
   // 注册avplayer回调函数
   private setAVPlayerCallback() {
@@ -71,8 +71,19 @@ class AVPLAYER {
     this.avPlayer.on('durationUpdate', (duration) => {
       /* 音频总时长转换 */
       const res = msTransform(duration)
+      // duration 的作用是计算timeUpdate时的百分比
+      AppState.setState(StateKey.duration, duration)
       AppState.setState(StateKey.musicDuration, res)
       console.info('durationUpdate success,new duration is :' + duration)
+    })
+
+    this.avPlayer.on('timeUpdate', (time: number) => {
+      AppState.setState(StateKey.musicTime, time)
+      console.info('timeUpdate success,and new time is :' + time)
+    })
+
+    this.avPlayer.on('seekDone', (seekDoneTime:number) => {
+      console.info('seekDone success,and seek time is:' + seekDoneTime)
     })
   }
 
@@ -119,6 +130,10 @@ class AVPLAYER {
     } else {
       this.avPlayer.play();
     }
+  }
+
+  public seekAudio(num: number) {
+    this.avPlayer.seek(num)
   }
 }
 
