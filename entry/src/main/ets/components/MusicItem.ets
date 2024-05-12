@@ -42,7 +42,11 @@ export struct MusicItem {
     })
     .onClick(async () => {
       const musicList = JSON.parse(AppState.getState(PersistentKey.musicList))
-      const fIndex = musicList.findIndex((i) => i.id === this.item.id)
+      const fIndex = musicList.findIndex((i) => {
+        if(i._id === this.item._id) {
+          return true
+        }
+      })
       if (fIndex !== -1) {
         // 如果 当前点击的音乐 已经在 播放列表里面
         musicList.splice(fIndex, 1)
@@ -52,7 +56,7 @@ export struct MusicItem {
 
       AppState.setState('musicTitle', this.item.name)
       AppState.setState('musicAuthor', this.item.author)
-      AppState.setState('musicId', this.item.id)
+      AppState.setState('musicId', this.item._id)
       AppState.setState('isPlaying', true)
       AppState.setState('musicPicUrl', this.item.picUrl)
       await AvPlayer.stopPlay()

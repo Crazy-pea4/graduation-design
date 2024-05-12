@@ -11,7 +11,7 @@ export interface ServerData {
   message: string
 }
 
-async function base(url: string, method: http.RequestMethod, extraData?: any) {
+async function base(url: string, method: http.RequestMethod, extraData = {}) {
   url = BASE_URL + url
   const httpRequest = http.createHttp();
   var header = {

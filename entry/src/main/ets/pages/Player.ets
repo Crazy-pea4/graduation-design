@@ -103,7 +103,7 @@ struct Player {
           .width(50)
           .height(50)
           .onClick(async () => {
-            const musicList = JSON.parse(AppState.getState(PersistentKey.musicList)) as MList[]
+            const musicList = JSON.parse(AppState.getState(PersistentKey.musicList) || '') as MList[]
             if (this.mustLastIndex <= 0) return
             this.mustLastIndex--
             const previousMusic = musicList[this.mustLastIndex]
@@ -131,7 +131,7 @@ struct Player {
           .width(50)
           .height(50)
           .onClick(async () => {
-            const musicList = JSON.parse(AppState.getState(PersistentKey.musicList)) as MList[]
+            const musicList = JSON.parse(AppState.getState(PersistentKey.musicList) || '') as MList[]
             if (this.mustLastIndex >= musicList.length - 1) return
             this.mustLastIndex++
             const nextMusic = musicList[this.mustLastIndex]

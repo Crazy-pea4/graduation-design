@@ -1,5 +1,5 @@
 export interface MList {
-  "id": string
+  "_id": string
   "name": string,
   "author": string,
   "picUrl": string,

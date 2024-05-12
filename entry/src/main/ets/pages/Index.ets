@@ -4,7 +4,7 @@ import { Home } from "./Tabs/Home"
 import { Ground } from './Tabs/Ground'
 
 PersistentState.setStorage(PersistentKey.token, '')
-PersistentState.setStorage(PersistentKey.musicList, [])
+PersistentState.setStorage(PersistentKey.musicList, '[]')
 PersistentState.setStorage(PersistentKey.nickname, '')
 
 @Entry(storage)
