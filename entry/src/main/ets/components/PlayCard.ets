@@ -10,7 +10,7 @@ export struct PlayCard {
 
   build() {
     Flex({ alignItems: ItemAlign.End }) {
-      Image(this.musicPicUrl || "").width(80).height(80).backgroundColor('#aaf9')
+      Image(this.musicPicUrl || $r("app.media.album")).width(80).height(80)
 
       Row() {
         Text(`${this.musicTitle ? this.musicTitle : '暂无歌手'}-${this.musicAuthor ? this.musicAuthor : '暂无作者'}`)

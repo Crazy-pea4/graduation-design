@@ -5,12 +5,19 @@ import { MusicItem } from '../../components/MusicItem';
 import { SearchBox } from '../../components/SearchBox';
 import { MList } from "../../type/index"
 import { showDialog } from '../../Utils/utils';
+import { httpRequestGet } from '../../Utils/HttpRequest';
 
 @Component
 export struct Home {
   @StorageLink('token') token: string = ''
   @StorageLink('nickname') nickname: string = ''
-  @StorageLink('musicList') musicList: any[] = []
+  @StorageLink('musicList') musicList: string = '[]'
+  @State reqData: MList[] = []
+
+  async aboutToAppear() {
+    const { data } = await httpRequestGet('music/', { keyword: '' }) as { data: MList[] }
+    this.reqData = [...data.slice(0, 7)];
+  }
 
   build() {
     Column() {
@@ -45,7 +52,7 @@ export struct Home {
                     showDialog(() => {
                       this.token = ''
                       this.nickname = ''
-                      this.musicList = []
+                      this.musicList = '[]'
                       console.log('注销成功')
                     })
                   })
@@ -86,11 +93,11 @@ export struct Home {
 
           /* 音乐列表 */
           Column() {
-            ForEach(mockData, (item: MockData, index) => {
+            ForEach(this.reqData, (item: MockData, index) => {
               MusicItem({
-                list: mockData as unknown as MList[],
+                list: this.reqData as unknown as MList[],
                 item: item as unknown as MList,
-                index
+                index: index as number
               })
             })
           }

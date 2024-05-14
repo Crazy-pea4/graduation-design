@@ -2,6 +2,7 @@ import { PersistentKey, PersistentState } from '../Utils/AppStorage'
 import { storage } from "../Utils/LocalStorage"
 import { Home } from "./Tabs/Home"
 import { Ground } from './Tabs/Ground'
+import { Record } from './Tabs/Record'
 
 PersistentState.setStorage(PersistentKey.token, '')
 PersistentState.setStorage(PersistentKey.musicList, '[]')
@@ -37,6 +38,10 @@ struct Index {
         TabContent() {
           Ground();
         }.tabBar(this.TabBarBuilder('广场', 1))
+
+        TabContent() {
+          Record();
+        }.tabBar(this.TabBarBuilder('录音', 2))
       }
       .onChange((index: number) => {
         this.currentIndex = index

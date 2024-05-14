@@ -1,10 +1,11 @@
 import fs from '@ohos.file.fs';
 import common from '@ohos.app.ability.common';
-import { checkPermissions, reqPermissionsAndRecord } from '../utils/Permission';
+import { checkPermissions, reqPermissionsAndRecord } from '../../utils/Permission';
 import { Permissions } from '@ohos.abilityAccessCtrl';
-import { AVRecorder } from '../Utils/AVRecorder'
-import { AvPlayer, PlayAudioFrom } from '../Utils/AVPlayer';
+import { AVRecorder } from '../../Utils/AVRecorder'
+import { AvPlayer, PlayAudioFrom } from '../../Utils/AVPlayer';
 import request from '@ohos.request';
+import { BASE_URL } from '../../const';
 
 // 需要动态申请的权限
 const permissions: Array<Permissions> = ['ohos.permission.MICROPHONE'];
@@ -30,9 +31,8 @@ function deleteFile() {
   fs.unlinkSync(filesDir + '/audio.m4a');
 }
 
-@Entry
 @Component
-struct SearchPage {
+export struct Record {
   @State recordBtnText: string = '按下录音'
   @State playBtnText: string = '播放音频'
   private playIng: boolean = false;
@@ -41,19 +41,20 @@ struct SearchPage {
     Flex({direction: FlexDirection.Column}) {
       // 测试网络
       Button('发送文件txt').onClick(async (event: ClickEvent) => {
+        console.log('发送文件txt')
         // 获取应用文件路径
         let cacheDir = context.cacheDir;
 
         await fs.copyFile(audioPath, cacheDir + '/audio.m4a')
 
         // 新建一个本地应用文件
-        let file = fs.openSync(cacheDir + '/test.txt', fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
-        fs.writeSync(file.fd, 'upload file test');
-        fs.closeSync(file);
+        // let file = fs.openSync(cacheDir + '/test.txt', fs.OpenMode.READ_WRITE | fs.OpenMode.CREATE);
+        // fs.writeSync(file.fd, 'upload file test');
+        // fs.closeSync(file);
 
         // 上传任务配置项
         let uploadConfig = {
-          url: 'http://192.168.1.3:3000/api/music/upload',
+          url: `${BASE_URL}music/upload`,
           header: { key1: 'Content-Type', key2: 'multipart/form-data' },
           method: 'POST',
           files: [
