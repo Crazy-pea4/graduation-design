@@ -11,7 +11,7 @@ export interface ServerData {
   message: string
 }
 
-async function base(url: string, method: http.RequestMethod, extraData = {}) {
+async function base(url: string, method: http.RequestMethod, extraData = {}, isCreateAt = false) {
   url = BASE_URL + url
   const httpRequest = http.createHttp();
   var header = {
@@ -19,6 +19,14 @@ async function base(url: string, method: http.RequestMethod, extraData = {}) {
     'token': AppState.getState('token') || ''
   }
   let serverData: ServerData = { code: 0, data: '', message: '' };
+
+  if(isCreateAt) {
+    extraData = {
+      createdAt: "1",
+      updatedAt: "1",
+      ...extraData
+    }
+  }
 
   try {
     let res = await httpRequest.request(url, {
@@ -48,7 +56,7 @@ async function base(url: string, method: http.RequestMethod, extraData = {}) {
 
 export const httpRequestGet = async (url: string, params?: any) => await base(url, http.RequestMethod.GET, params)
 
-export const httpRequestPost = async (url: string, params: any) => await base(url, http.RequestMethod.POST, params)
+export const httpRequestPost = async (url: string, params: any, isCreateAt: boolean = false) => await base(url, http.RequestMethod.POST, params, isCreateAt)
 
 export const httpRequestDel = async (url: string) => await base(url, http.RequestMethod.DELETE)
 

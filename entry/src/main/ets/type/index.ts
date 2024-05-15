@@ -12,3 +12,14 @@ export interface MList {
 export interface GroundItemRouterParams {
   groundUrl: string
 }
+
+export interface GroundItemType {
+  "_id": string,
+  "musicId": string,
+  "topicName": string,
+  "topicIntroduction": string,
+  "musicAuthor": string,
+  "topicPic": string,
+  "createdAt": string,
+  "updatedAt": string,
+}

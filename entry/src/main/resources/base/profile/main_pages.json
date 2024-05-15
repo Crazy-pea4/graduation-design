@@ -6,6 +6,7 @@
     "pages/Player",
     "pages/Mine",
     "pages/GroundDetail",
+    "pages/Share",
     "pages/test"
   ]
 }

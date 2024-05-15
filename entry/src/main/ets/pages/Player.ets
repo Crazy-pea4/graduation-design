@@ -4,11 +4,12 @@ import { AvPlayer } from '../Utils/AVPlayer';
 import { storage } from '../Utils/LocalStorage';
 import { msTransform } from '../Utils/utils';
 import { MList } from "../type/index"
+import router from '@ohos.router';
 
 @Entry(storage)
 @Component
 struct Player {
-  @State angleA: number = 0
+  // @State angleA: number = 0
   @State isSliderDrag: boolean = false
   @State dragCurrentPercent: number = 0
   @StorageLink('musicTitle') musicTitle: string = ''
@@ -26,15 +27,15 @@ struct Player {
     // const res = msTransform(ms)
     // this.duration = res
 
-    if (this.isPlaying) {
-      animateTo({
-        duration: 10000,
-        curve: Curve.Linear,
-        iterations: -1, // 设置-1表示动画无限循环
-      }, () => {
-        this.angleA = 360
-      })
-    }
+    // if (this.isPlaying) {
+    //   animateTo({
+    //     duration: 10000,
+    //     curve: Curve.Linear,
+    //     iterations: -1, // 设置-1表示动画无限循环
+    //   }, () => {
+    //     this.angleA = 360
+    //   })
+    // }
   }
 
   build() {
@@ -46,15 +47,28 @@ struct Player {
           .borderRadius(200)
           .backgroundColor("#aff")
           .animation({ duration: 2000 })
-          .rotate({
-            angle: this.angleA
-          })
+        // .rotate({
+        //   angle: this.angleA
+        // })
       }
       .width('100%')
       .height('330vp')
       .backgroundColor("#aadff1f1")
 
+      Flex({ justifyContent: FlexAlign.End }) {
+        Image($r("app.media.grey_like"))
+          .width(20)
+        Image($r("app.media.share"))
+          .margin({ left: 10, right: 10 })
+          .width(20)
+          .onClick(() => {
+            router.pushUrl({ url: 'pages/Share' })
+          })
+      }
+      .margin({ top: 20, bottom: 20 })
+
       Flex({ justifyContent: FlexAlign.SpaceBetween, alignItems: ItemAlign.Center }) {
+        // 音乐名称和作者
         Flex({ direction: FlexDirection.Column }) {
           Text(this.musicTitle || '暂无标题')
             .margin({ bottom: 8 })
@@ -63,9 +77,9 @@ struct Player {
             .fontSize(15)
         }
 
+        // 音乐总时长
         Text(this.musicDuration)
       }
-      .margin({ top: 40 })
       .width('100%')
       .height(50)
       .backgroundColor("#ffdd")

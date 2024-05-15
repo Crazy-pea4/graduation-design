@@ -17,6 +17,7 @@ export struct MusicItem {
           Image(this.item.picUrl || '')
             .width(50).height('100%').backgroundColor('#aaf9')
 
+          // 音乐名称和作者
           Flex({ direction: FlexDirection.Row, alignItems: ItemAlign.Center }) {
             Text(this.item.name)
             Text('-')
