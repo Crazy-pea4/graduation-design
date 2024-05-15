@@ -52,7 +52,7 @@ struct Player {
       }
       .width('100%')
       .height('330vp')
-      .backgroundColor("#aadf")
+      .backgroundColor("#aadff1f1")
 
       Flex({ justifyContent: FlexAlign.SpaceBetween, alignItems: ItemAlign.Center }) {
         Flex({ direction: FlexDirection.Column }) {

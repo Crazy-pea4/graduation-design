@@ -86,7 +86,7 @@ export struct Home {
             .padding({ top: 15, bottom: 15, left: 15, right: 15 })
             .margin({ top: 10, bottom: 20 })
             .width('100%')
-            .backgroundColor('#ccc2')
+            .backgroundColor('#f1f1f1')
           }
 
           // .animation({ duration: 500 })

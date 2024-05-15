@@ -23,7 +23,7 @@ export struct GroundItem {
         this.onClickEvent({ groundUrl: `${this.index}` })
       })
 
-      Flex({direction: FlexDirection.Column}) {
+      Flex({direction: FlexDirection.Column, justifyContent: FlexAlign.SpaceBetween}) {
         // 音乐标题
         Flex({alignItems: ItemAlign.Center}) {
           Text('音乐标题')
@@ -38,21 +38,22 @@ export struct GroundItem {
             .textOverflow({overflow: TextOverflow.Ellipsis})
         }
         .margin({top: 10})
+
+        // 喜欢
+        Image(this.isLike ? $r("app.media.red_like") : $r("app.media.like"))
+          .width(20)
+          .height(20)
+          .alignSelf(ItemAlign.End)
+          .onClick(() => {
+            // 后台接口
+            this.isLike = !this.isLike
+          })
       }
-      .height("70")
+      .height("100%")
       .margin({left: 10})
       .onClick(() => {
         this.onClickEvent({ groundUrl: `${this.index}` })
       })
-
-      Image(this.isLike ? $r("app.media.red_like") : $r("app.media.like"))
-        .width(20)
-        .height(20)
-        .position({x: 290, y: 75})
-        .onClick(() => {
-          // 后台接口
-          this.isLike = !this.isLike
-        })
     }
     .margin({ bottom: 15 })
     .padding(10)
