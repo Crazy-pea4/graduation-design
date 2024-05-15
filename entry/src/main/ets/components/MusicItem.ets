@@ -11,7 +11,6 @@ export struct MusicItem {
   @StorageLink('nickname') nickname: string = ''
 
   build() {
-
     Row() {
       Column() {
         Row() {

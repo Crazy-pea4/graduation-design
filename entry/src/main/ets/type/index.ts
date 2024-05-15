@@ -8,3 +8,7 @@ export interface MList {
   "likes": number,
   "isLikes": boolean,
 }
+
+export interface GroundItemRouterParams {
+  groundUrl: string
+}

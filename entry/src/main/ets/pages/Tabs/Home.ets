@@ -109,5 +109,7 @@ export struct Home {
         onClickEvent: () => router.pushUrl({ url: "pages/Player" }),
       })
     }
+    .height("100%")
+    .alignItems(HorizontalAlign.Start)
   }
 }

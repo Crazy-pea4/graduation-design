@@ -4,6 +4,8 @@
     "pages/Search",
     "pages/Login",
     "pages/Player",
-    "pages/Mine"
+    "pages/Mine",
+    "pages/GroundDetail",
+    "pages/test"
   ]
 }

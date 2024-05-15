@@ -1,11 +1,11 @@
 import fs from '@ohos.file.fs';
 import common from '@ohos.app.ability.common';
-import { checkPermissions, reqPermissionsAndRecord } from '../../utils/Permission';
+import { checkPermissions, reqPermissionsAndRecord } from '../utils/Permission';
 import { Permissions } from '@ohos.abilityAccessCtrl';
-import { AVRecorder } from '../../Utils/AVRecorder'
-import { AvPlayer, PlayAudioFrom } from '../../Utils/AVPlayer';
+import { AVRecorder } from '../Utils/AVRecorder'
+import { AvPlayer, PlayAudioFrom } from '../Utils/AVPlayer';
 import request from '@ohos.request';
-import { BASE_URL } from '../../const';
+import { BASE_URL } from '../const';
 
 // 需要动态申请的权限
 // const permissions: Array<Permissions> = ['ohos.permission.MICROPHONE'];
@@ -31,8 +31,9 @@ function deleteFile() {
   fs.unlinkSync(filesDir + '/audio.m4a');
 }
 
+@Entry
 @Component
-export struct Record {
+struct Record {
   @State title: string = ''
   @State recordTouch: boolean = false
   @State recordBtnText: string = '按下录音'
@@ -43,8 +44,8 @@ export struct Record {
     Flex({ direction: FlexDirection.Column }) {
       Row() {
         Text('上传')
-          .fontSize(18)
-          .fontWeight(500)
+          .fontSize(20)
+          .fontWeight(600)
           .width('100%')
           .textAlign(TextAlign.End)
           .onClick(() => {
@@ -60,8 +61,10 @@ export struct Record {
             this.title = value
           })
         Image($r("app.media.defaultCover"))
+          .margin({ top: 10 })
           .width("100%")
-
+          .height(350)
+        // .backgroundColor("#ddff")
         Image($r("app.media.record"))
           .margin({ top: 20 })
           .width(100)

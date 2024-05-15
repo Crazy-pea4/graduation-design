@@ -32,7 +32,8 @@ struct Index {
     Column() {
       Tabs({ barPosition: BarPosition.End }) {
         TabContent() {
-          Home();
+          Ground();
+          // Home();
         }.tabBar(this.TabBarBuilder('首页', 0))
 
         TabContent() {
