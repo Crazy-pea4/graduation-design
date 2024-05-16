@@ -1,24 +1,19 @@
-import { GroundItemType } from '../type'
-interface RouterParams {
-  groundUrl: string;
-}
+import { GroundItemRouterParams, GroundItemType } from '../type'
 
 @Component
 export struct GroundItem {
   item: GroundItemType
-  @Prop index: number
   @State isLike: boolean = false
-  onClickEvent: (routerParams: RouterParams) => void
+  onClickEvent: (routerParams: GroundItemRouterParams) => void
 
   build() {
     Column() {
       Row() {
         Text(this.item.topicIntroduction)
+          .width("100%")
+          .textAlign(TextAlign.Center)
           .maxLines(2)
           .textOverflow({ overflow: TextOverflow.Ellipsis })
-          .onClick(() => {
-            this.onClickEvent({ groundUrl: `${this.index}` })
-          })
       }
       .margin({ top: 5, bottom: 5 })
       Row() {
@@ -27,9 +22,6 @@ export struct GroundItem {
           .width(50)
           .height(50)
           .backgroundColor("#ddf")
-          .onClick(() => {
-            this.onClickEvent({ groundUrl: `${this.index}` })
-          })
 
         Row() {
           // 音乐标题
@@ -40,10 +32,8 @@ export struct GroundItem {
               .fontSize(14)
           }
         }
+        .width("100%")
         .margin({ left: 10 })
-        .onClick(() => {
-          this.onClickEvent({ groundUrl: `${this.index}` })
-        })
 
         Row() {
           // 喜欢
@@ -66,5 +56,8 @@ export struct GroundItem {
     .height(120)
     .backgroundColor("#f3f3f3")
     .borderRadius(10)
+    .onClick(() => {
+      this.onClickEvent({ groundId: `${this.item._id}`, groundItem: this.item })
+    })
   }
 }

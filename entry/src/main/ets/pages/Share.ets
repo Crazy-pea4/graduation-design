@@ -1,4 +1,5 @@
 import { httpRequestPost } from '../Utils/HttpRequest'
+import router from '@ohos.router'
 @Entry
 @Component
 struct Share {
@@ -23,7 +24,7 @@ struct Share {
           .borderRadius(10)
           .textAlign(TextAlign.Center)
           .fontColor('#fff')
-          .backgroundColor("#506df0")
+          .backgroundColor($r("app.color.main_color"))
           .onClick(async () => {
             const params = {
               musicId: this.musicId,
@@ -32,6 +33,9 @@ struct Share {
               topicIntroduction: this.textAreaVal
             }
             const res = await httpRequestPost("topic/", params, true)
+            if(res.code === 200) {
+              router.replaceUrl({url: "pages/Index", params: {index: 1}})
+            }
             console.log(`${res}`)
           })
       }

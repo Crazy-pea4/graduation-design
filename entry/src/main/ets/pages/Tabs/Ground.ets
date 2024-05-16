@@ -25,10 +25,9 @@ export struct Ground {
               ForEach(this.reqData, (item, index) => {
                 GroundItem({
                   item,
-                  index: index as number,
                   onClickEvent: (routerParams) => {
-                    const {groundUrl} = routerParams
-                    router.pushUrl({ url: "pages/GroundDetail", params: { groundUrl } })
+                    const { groundId, groundItem } = routerParams
+                    router.pushUrl({ url: "pages/GroundDetail", params: { groundId, groundItem } })
                   }
                 })
               })
@@ -38,7 +37,7 @@ export struct Ground {
         }
       }
     }
-    .padding({top: 10})
+    .padding({ top: 10 })
     .height('100%')
     .alignItems(HorizontalAlign.Start)
   }

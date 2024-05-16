@@ -10,7 +10,8 @@ export interface MList {
 }
 
 export interface GroundItemRouterParams {
-  groundUrl: string
+  groundId: string
+  groundItem: GroundItemType
 }
 
 export interface GroundItemType {
@@ -22,4 +23,20 @@ export interface GroundItemType {
   "topicPic": string,
   "createdAt": string,
   "updatedAt": string,
+}
+
+export interface GroundDetailType {
+  "_id": string,
+  "title": string,
+  "questioner": {
+    "_id": string,
+    "nickname": string,
+    "phoneNumber": string,
+    "avatarUrl": string
+  },
+  "topics": [
+    string
+  ],
+  "createdAt": string,
+  "updatedAt": string
 }

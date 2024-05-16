@@ -4,8 +4,8 @@ import { MList } from "../type/index"
 
 @Component
 export struct MusicItem {
-  @Prop item: MList
-  @Prop list: MList[]
+  item: MList
+  list: MList[]
   @Prop index: number
   @StorageLink('token') token: string = ''
   @StorageLink('nickname') nickname: string = ''
