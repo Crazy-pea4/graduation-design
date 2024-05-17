@@ -12,6 +12,7 @@ export struct Home {
   @StorageLink('token') token: string = ''
   @StorageLink('nickname') nickname: string = ''
   @StorageLink('musicList') musicList: string = '[]'
+  @StorageLink('userId') userId: string = ''
   @State reqData: MList[] = []
 
   async aboutToAppear() {
@@ -53,6 +54,7 @@ export struct Home {
                       this.token = ''
                       this.nickname = ''
                       this.musicList = '[]'
+                      this.userId = ''
                       console.log('注销成功')
                     })
                   })
@@ -68,6 +70,17 @@ export struct Home {
                 .onClick(() => {
                   router.pushUrl({ url: "pages/Mine", params: {
                     mine: 1
+                  } })
+                })
+
+                Column() {
+                  Image($r("app.media.download"))
+                    .width(40)
+                  Text('录音')
+                }
+                .onClick(() => {
+                  router.pushUrl({ url: "pages/Mine", params: {
+                    record: 1
                   } })
                 })
 

@@ -8,6 +8,7 @@ struct Login {
   @State password: string = ''
   @StorageLink('token') token: string = ''
   @StorageLink('nickname') nickname: string = ''
+  @StorageLink('userId') userId: string = ''
 
   build() {
     Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
@@ -46,10 +47,11 @@ struct Login {
             const formObj = {}
             formObj['phoneNumber'] = this.phoneNumber
             formObj['password'] = this.password
-            const {code, token, data: { nickname }} = await httpRequestPost('auth/', formObj)
+            const {code, token, userId, data: { nickname }} = await httpRequestPost('auth/', formObj)
             if (code === 200) {
               this.token = token as string
               this.nickname = nickname
+              this.userId = userId as string
               setTimeout(() => {
                 router.replaceUrl({ url: 'pages/Index' })
               }, 1000)

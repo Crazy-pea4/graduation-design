@@ -2,7 +2,8 @@
 import { BASE_URL } from '../const/index';
 import http from '@ohos.net.http';
 import { showToast } from './utils';
-import { AppState } from './AppStorage';
+import { AppState, PersistentKey } from './AppStorage';
+import router from '@ohos.router';
 
 export interface ServerData {
   [key: string]: string | number,
@@ -11,7 +12,15 @@ export interface ServerData {
   message: string
 }
 
-async function base(url: string, method: http.RequestMethod, extraData = {}, isCreateAt = false) {
+async function base(url: string, method: http.RequestMethod, extraData = {}, isCreateAt = false, needJumpLogin = false) {
+  if(!AppState.getState(PersistentKey.token) && needJumpLogin) {
+    showToast('需要先登录')
+    setTimeout(() => {
+      router.pushUrl({url: "pages/Login"})
+    }, 1500)
+    return;
+  }
+
   url = BASE_URL + url
   const httpRequest = http.createHttp();
   var header = {
@@ -54,9 +63,9 @@ async function base(url: string, method: http.RequestMethod, extraData = {}, isC
   }
 }
 
-export const httpRequestGet = async (url: string, params?: any) => await base(url, http.RequestMethod.GET, params)
+export const httpRequestGet = async (url: string, params?: any, isCreateAt: boolean = false, needJumpLogin: boolean = false) => await base(url, http.RequestMethod.GET, params, isCreateAt, needJumpLogin)
 
-export const httpRequestPost = async (url: string, params: any, isCreateAt: boolean = false) => await base(url, http.RequestMethod.POST, params, isCreateAt)
+export const httpRequestPost = async (url: string, params: any, isCreateAt: boolean = false, needJumpLogin: boolean = false) => await base(url, http.RequestMethod.POST, params, isCreateAt, needJumpLogin)
 
 export const httpRequestDel = async (url: string) => await base(url, http.RequestMethod.DELETE)
 

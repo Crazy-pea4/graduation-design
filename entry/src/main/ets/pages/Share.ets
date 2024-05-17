@@ -1,5 +1,6 @@
 import { httpRequestPost } from '../Utils/HttpRequest'
 import router from '@ohos.router'
+
 @Entry
 @Component
 struct Share {
@@ -16,7 +17,7 @@ struct Share {
 
   build() {
     Flex({ direction: FlexDirection.Column }) {
-      Flex({justifyContent: FlexAlign.SpaceBetween, alignItems: ItemAlign.Center}) {
+      Flex({ justifyContent: FlexAlign.SpaceBetween, alignItems: ItemAlign.Center }) {
         Text('取消')
         Text('发表')
           .width(60)
@@ -32,9 +33,9 @@ struct Share {
               topicPic: this.musicPicUrl,
               topicIntroduction: this.textAreaVal
             }
-            const res = await httpRequestPost("topic/", params, true)
-            if(res.code === 200) {
-              router.replaceUrl({url: "pages/Index", params: {index: 1}})
+            const res = await httpRequestPost("topic/", params, true, true)
+            if (res.code === 200) {
+              router.replaceUrl({ url: "pages/Index", params: { index: 1 } })
             }
             console.log(`${res}`)
           })
@@ -42,11 +43,11 @@ struct Share {
 
       Column() {
         Row() {
-          TextArea({placeholder: '这一刻的想法...'})
-            .margin({top: 25, bottom: 25})
+          TextArea({ placeholder: '这一刻的想法...' })
+            .margin({ top: 25, bottom: 25 })
             .padding(0)
             .backgroundColor("#ffffff")
-            .stateStyles({pressed: this.onPress})
+            .stateStyles({ pressed: this.onPress })
             .height(60)
             .onChange((value) => {
               this.textAreaVal = value
@@ -62,14 +63,12 @@ struct Share {
           // 音乐名称和作者
           Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center, alignItems: ItemAlign.Start }) {
             Row() {
-              Text(this.musicTitle || "暂无名称")
-                .fontSize(14)
-              Text('-')
-                .fontSize(14)
-                .margin({ left: 5, right: 5 })
-              Text(this.musicAuthor || "暂无作者")
+              Text(this.musicTitle + '-' + this.musicAuthor || "暂无数据")
+                .maxLines(1)
+                .textOverflow({ overflow: TextOverflow.Ellipsis })
                 .fontSize(14)
             }
+            .width("100%")
 
             Row() {
               Text(this.musicAuthor || "暂无作者")
@@ -77,6 +76,7 @@ struct Share {
                 .fontColor("#fdfdfd")
             }
           }
+          .width("166vp")
           .height(70)
           .margin({ left: 10 })
         }
@@ -93,12 +93,12 @@ struct Share {
               .fontColor('#ddd')
           }
         }
-        .margin({top: 20})
+        .margin({ top: 20 })
         .width("100%")
         .alignItems(HorizontalAlign.End)
       }
       .alignItems(HorizontalAlign.Start)
-      .padding({left: 16, right: 16})
+      .padding({ left: 16, right: 16 })
     }
     .padding(20)
     .width("100%")

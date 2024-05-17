@@ -1,4 +1,6 @@
 import router from "@ohos.router"
+import { Record } from './Tabs/Mine/Record'
+import { Likes } from './Tabs/Mine/Likes'
 
 export const controller: TabsController = new TabsController()
 
@@ -12,11 +14,14 @@ struct Mine {
 
   onPageShow() {
     const params = router.getParams()
-    if(params['mine']) {
+    if (params['mine']) {
       controller.changeIndex(0)
     }
-    if(params['download']) {
+    if (params['record']) {
       controller.changeIndex(1)
+    }
+    if (params['download']) {
+      controller.changeIndex(2)
     }
   }
 
@@ -37,12 +42,16 @@ struct Mine {
     Column() {
       Tabs({ barPosition: BarPosition.Start, controller }) {
         TabContent() {
-          Text('喜欢')
+          Likes()
         }.tabBar(this.TabBarBuilder('喜欢', 0))
 
         TabContent() {
+          Record()
+        }.tabBar(this.TabBarBuilder('录音', 1))
+
+        TabContent() {
           Text('下载')
-        }.tabBar(this.TabBarBuilder('下载', 1))
+        }.tabBar(this.TabBarBuilder('下载', 2))
       }
       .onChange((index: number) => {
         this.currentIndex = index

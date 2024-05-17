@@ -7,6 +7,7 @@ export struct MusicItem {
   item: MList
   list: MList[]
   @Prop index: number
+  @StorageLink('userId') userId: string = ''
   @StorageLink('token') token: string = ''
   @StorageLink('nickname') nickname: string = ''
 
@@ -19,10 +20,10 @@ export struct MusicItem {
 
           // 音乐名称和作者
           Flex({ direction: FlexDirection.Row, alignItems: ItemAlign.Center }) {
-            Text(this.item.name)
+            Text(this.item.name || 'this.item.name')
             Text('-')
               .margin({ left: 5, right: 5 })
-            Text(this.item.author)
+            Text(this.item.author || 'this.item.author')
               .fontSize(14)
           }.margin({ left: 10 })
         }
@@ -43,7 +44,7 @@ export struct MusicItem {
     .onClick(async () => {
       const musicList = JSON.parse(AppState.getState(PersistentKey.musicList))
       const fIndex = musicList.findIndex((i) => {
-        if(i._id === this.item._id) {
+        if (i._id === this.item._id) {
           return true
         }
       })
@@ -55,10 +56,14 @@ export struct MusicItem {
       AppState.setState(PersistentKey.musicList, JSON.stringify(musicList))
 
       AppState.setState('musicTitle', this.item.name)
-      AppState.setState('musicAuthor', this.item.author)
+      AppState.setState('musicAuthor', this.item.author || this.nickname)
       AppState.setState('musicId', this.item._id)
       AppState.setState('isPlaying', true)
-      AppState.setState('musicPicUrl', this.item.picUrl)
+      AppState.setState('musicPicUrl', this.item.picUrl || '')
+      if (this.item.likesList) {
+        const isLiked = this.item.likesList.some((item) => item === this.userId)
+        AppState.setState('isLiked', isLiked)
+      }
       await AvPlayer.stopPlay()
       AvPlayer.playAudio(this.item.url)
     })

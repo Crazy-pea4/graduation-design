@@ -3,7 +3,7 @@ import { ServerData } from './HttpRequest'
 
 /********************************/
 /* 单位: 毫秒 */
-export async function sleep(time: number = 100) {
+export async function sleep(time: number = 600) {
   await new Promise((res) => setTimeout(() => res(1), time))
 }
 /********************************/

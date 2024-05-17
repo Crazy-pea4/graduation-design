@@ -1,7 +1,8 @@
 export enum PersistentKey {
   token = 'token',
   musicList = 'musicList',
-  nickname = 'nickname'
+  nickname = 'nickname',
+  userId = 'userId'
 }
 
 export enum StateKey {

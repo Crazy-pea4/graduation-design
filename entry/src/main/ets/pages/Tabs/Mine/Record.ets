@@ -4,12 +4,12 @@ import { MList } from '../../../type'
 import { httpRequestGet } from '../../../Utils/HttpRequest'
 
 @Component
-export struct Likes {
+export struct Record {
   @StorageLink('userId') userId: string = ''
   @State list: MList[] = [] as MList[]
 
   async aboutToAppear() {
-    const {code, data} = await httpRequestGet(`user/${this.userId}/music`, undefined, true)
+    const {code, data} = await httpRequestGet(`user/${this.userId}/record`, undefined, true)
     if (code === 200)
       this.list = data;
   }

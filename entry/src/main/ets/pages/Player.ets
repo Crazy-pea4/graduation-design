@@ -5,6 +5,7 @@ import { storage } from '../Utils/LocalStorage';
 import { msTransform } from '../Utils/utils';
 import { MList } from "../type/index"
 import router from '@ohos.router';
+import { httpRequestPost } from '../Utils/HttpRequest';
 
 @Entry(storage)
 @Component
@@ -12,10 +13,12 @@ struct Player {
   // @State angleA: number = 0
   @State isSliderDrag: boolean = false
   @State dragCurrentPercent: number = 0
+  @StorageLink('musicId') musicId: string = ''
   @StorageLink('musicTitle') musicTitle: string = ''
   @StorageLink('musicAuthor') musicAuthor: string = ''
   @StorageLink('musicPicUrl') musicPicUrl: string = ''
   @StorageLink('isPlaying') isPlaying: boolean = false
+  @StorageLink('isLiked') isLiked: boolean = false
   @StorageLink('musicDuration') musicDuration: string = '00:00'
   @StorageLink('duration') duration: number = 0
   @StorageLink('musicTime') musicTime: number = 0
@@ -56,8 +59,14 @@ struct Player {
       .backgroundColor("#aadff1f1")
 
       Flex({ justifyContent: FlexAlign.End }) {
-        Image($r("app.media.grey_like"))
+        Image(this.isLiked ? $r("app.media.red_like") : $r("app.media.grey_like"))
           .width(20)
+          .onClick(async () => {
+            const {code} = await httpRequestPost(`user/${this.musicId}/music`, {}, false, true)
+            if (code === 200) {
+              this.isLiked = !this.isLiked
+            }
+          })
         Image($r("app.media.share"))
           .margin({ left: 10, right: 10 })
           .width(20)

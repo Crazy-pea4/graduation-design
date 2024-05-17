@@ -6,7 +6,7 @@ export interface MList {
   "uploader": string,
   "url": string,
   "likes": number,
-  "isLikes": boolean,
+  "likesList": string[]
 }
 
 export interface GroundItemRouterParams {
