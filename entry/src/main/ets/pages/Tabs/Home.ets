@@ -103,12 +103,11 @@ export struct Home {
                   .backgroundColor('')
                   .visibility(this.token ? Visibility.Visible : Visibility.None)
                   .onClick(() => {
-                    showDialog(() => {
+                    showDialog.logOff('确定注销吗', '注销', '取消', () => {
                       this.token = ''
                       this.nickname = ''
                       this.musicList = '[]'
                       this.userId = ''
-                      console.log('注销成功')
                     })
                   })
               }
@@ -122,12 +121,12 @@ export struct Home {
                 }
                 .onClick(async () => {
                   router.pushUrl({ url: "pages/Mine", params: {
-                    mine: 1
+                    like: 1
                   } })
                 })
 
                 Column() {
-                  Image($r("app.media.download"))
+                  Image($r("app.media.record_mine"))
                     .width(40)
                   Text('录音')
                 }

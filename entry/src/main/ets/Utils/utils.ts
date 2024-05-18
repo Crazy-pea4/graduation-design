@@ -16,11 +16,11 @@ export function msTransform(ms: number) {
 
   let strMin: string = `${min}`
   let strSec: string = `${sec}`
-  if(min < 10) {
+  if (min < 10) {
     strMin = '0' + min
   }
 
-  if(sec < 10) {
+  if (sec < 10) {
     strSec = '0' + sec
   }
 
@@ -34,29 +34,63 @@ export function showToast(message: string, duration = 1500) {
   promptAction.showToast({ message, duration })
 }
 /********************************/
-
-export function showDialog(cb: () => void) {
-  promptAction.showDialog({
-    title: '确认注销吗？',
+async function genDialogText(title: string, okText: string, cancelText: string) {
+  const data = await promptAction.showDialog({
+    title,
     message: '',
     buttons: [
       {
-        text: '注销',
+        text: okText,
         color: '#000000',
       },
       {
-        text: '取消',
+        text: cancelText,
         color: '#000000',
       }
     ],
   })
-    .then(data => {
-      if(data.index === 0) {
+
+  return data
+}
+export const showDialog = {
+  logOff: async function (title: string, okText: string, cancelText: string, cb: () => void) {
+    try {
+      const data = await genDialogText(title, okText, cancelText)
+      if (data.index === 0) {
         cb()
       }
       console.info('showDialog success, click button: ' + data.index);
-    })
-    .catch(err => {
+    } catch (err) {
       console.info('showDialog error: ' + err);
-    })
+    }
+  },
+  deleteDownLoadMusic: async function (title: string, okText: string, cancelText: string, cb: () => void) {
+    try {
+      const data = await genDialogText(title, okText, cancelText)
+      if (data.index === 0) {
+        cb()
+      }
+      console.info('showDialog success, click button: ' + data.index);
+      return
+    } catch (err) {
+      console.info('showDialog error: ' + err);
+    }
+  }
+}
+
+export function toUnicodeFun(data) {
+  var str = '';
+  for (var i = 0;i < data.length; i++) {
+    str += "\\u" + data.charCodeAt(i).toString(16);
+  }
+  return str;
+}
+
+export function toChineseWords(data) {
+  data = data.split("\\u");
+  var str = '';
+  for (var i = 0;i < data.length; i++) {
+    str += String.fromCharCode(parseInt(data[i], 16));
+  }
+  return str;
 }

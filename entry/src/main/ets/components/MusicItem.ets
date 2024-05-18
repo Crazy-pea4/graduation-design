@@ -1,12 +1,19 @@
+import fs from '@ohos.file.fs';
 import { AppState, PersistentKey } from '../Utils/AppStorage'
-import { AvPlayer } from '../Utils/AVPlayer'
+import { AvPlayer, PlayAudioFrom } from '../Utils/AVPlayer'
 import { MList } from "../type/index"
+import { showDialog } from '../Utils/utils'
 
+@Preview
 @Component
 export struct MusicItem {
   item: MList
   list: MList[]
-  @Prop index: number
+  index: number
+  //
+  showDeleteButton: boolean = false
+  cb: () => any = () => {}
+  //
   @StorageLink('userId') userId: string = ''
   @StorageLink('token') token: string = ''
   @StorageLink('nickname') nickname: string = ''
@@ -26,7 +33,19 @@ export struct MusicItem {
               .margin({ left: 5, right: 5 })
             Text(this.item.author || 'this.item.author')
               .fontSize(14)
-          }.margin({ left: 10 })
+          }
+          .margin({ left: 10 })
+
+          Image($r("app.media.delete"))
+            .position({x: '93%', y: 14})
+            .width(20)
+            .visibility(this.showDeleteButton ? Visibility.Visible : Visibility.None)
+            .onClick(() => {
+              showDialog.deleteDownLoadMusic('确定删除吗', '删除', '取消', () => {
+                fs.unlinkSync(this.item.url)
+                this.cb()
+              })
+            })
         }
       }
       .border({
@@ -61,6 +80,7 @@ export struct MusicItem {
       AppState.setState('musicId', this.item._id)
       AppState.setState('isPlaying', true)
       AppState.setState('musicPicUrl', this.item.picUrl || '')
+      AppState.setState('musicUrl', this.item.url)
       if (this.item.likesList) {
         const isLiked = this.item.likesList.some((item) => item === this.userId)
         AppState.setState('isLiked', isLiked)

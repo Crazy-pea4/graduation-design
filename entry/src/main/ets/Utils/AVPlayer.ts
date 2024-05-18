@@ -109,10 +109,10 @@ class AVPLAYER {
   }
 
   // 播放音频
-  public async playAudio(path?: string, playAudioFrom?: PlayAudioFrom) {
+  public async playAudio(path?: string) {
     // 如果path存在则是播放录制音频，否则是播放正常http协议音频
     if (path) {
-      if (playAudioFrom === PlayAudioFrom.local) {
+      if(!path.startsWith("http")) {
         let fdPath = 'fd://';
         let res = fs.accessSync(path);
         if (!res) {

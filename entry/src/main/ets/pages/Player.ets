@@ -2,15 +2,15 @@ import { MockData } from '../const/mock';
 import { AppState, PersistentKey, StateKey } from '../Utils/AppStorage';
 import { AvPlayer } from '../Utils/AVPlayer';
 import { storage } from '../Utils/LocalStorage';
-import { msTransform } from '../Utils/utils';
+import { toUnicodeFun } from '../Utils/utils';
 import { MList } from "../type/index"
 import router from '@ohos.router';
 import { httpRequestPost } from '../Utils/HttpRequest';
+import request from '@ohos.request';
 
 @Entry(storage)
 @Component
 struct Player {
-  // @State angleA: number = 0
   @State isSliderDrag: boolean = false
   @State dragCurrentPercent: number = 0
   @StorageLink('musicId') musicId: string = ''
@@ -20,8 +20,11 @@ struct Player {
   @StorageLink('isPlaying') isPlaying: boolean = false
   @StorageLink('isLiked') isLiked: boolean = false
   @StorageLink('musicDuration') musicDuration: string = '00:00'
+  @StorageLink('musicUrl') musicUrl: string = ''
   @StorageLink('duration') duration: number = 0
   @StorageLink('musicTime') musicTime: number = 0
+  // 是否是本地下载音乐
+  @State isDownloadMusic: boolean = !this.musicUrl.startsWith('http')
   // 初始时代表musicList的倒数第1位
   @State mustLastIndex: number = JSON.parse(AppState.getState(PersistentKey.musicList)).length - 1
 
@@ -48,7 +51,6 @@ struct Player {
           .width(250)
           .height(250)
           .borderRadius(200)
-          .backgroundColor("#aff")
           .animation({ duration: 2000 })
         // .rotate({
         //   angle: this.angleA
@@ -58,6 +60,7 @@ struct Player {
       .height('330vp')
       .backgroundColor("#aadff1f1")
 
+      // 操作icon
       Flex({ justifyContent: FlexAlign.End }) {
         Image(this.isLiked ? $r("app.media.red_like") : $r("app.media.grey_like"))
           .width(20)
@@ -73,8 +76,24 @@ struct Player {
           .onClick(() => {
             router.pushUrl({ url: 'pages/Share' })
           })
+        Text("下载")
+          .onClick(async () => {
+            const unicode = toUnicodeFun(`${this.musicTitle}_${this.musicAuthor}`)
+            const DownloadTask = await request.downloadFile(getContext(this), {
+              url: this.musicUrl,
+              filePath: `${getContext(this).tempDir}/${unicode}_music.mp3`,
+              background: true
+            })
+            DownloadTask.on('complete', () => {
+              console.log('request.downloadFile complete')
+            })
+            DownloadTask.on('fail', () => {
+              console.log('request.downloadFile fail')
+            })
+          })
       }
       .margin({ top: 20, bottom: 20 })
+      .visibility(this.isDownloadMusic ? Visibility.Hidden : Visibility.Visible)
 
       Flex({ justifyContent: FlexAlign.SpaceBetween, alignItems: ItemAlign.Center }) {
         // 音乐名称和作者
@@ -135,6 +154,11 @@ struct Player {
             this.musicAuthor = previousMusic.author
             this.musicPicUrl = previousMusic.picUrl
             this.isPlaying = true
+            if(previousMusic.url.startsWith('http')) {
+              this.isDownloadMusic = false
+            } else {
+              this.isDownloadMusic = true
+            }
             AvPlayer.playAudio(previousMusic.url)
           })
         Image(this.isPlaying ? $r("app.media.main_pause") : $r("app.media.main_play"))
@@ -163,6 +187,11 @@ struct Player {
             this.musicAuthor = nextMusic.author
             this.musicPicUrl = nextMusic.picUrl
             this.isPlaying = true
+            if(nextMusic.url.startsWith('http')) {
+              this.isDownloadMusic = false
+            } else {
+              this.isDownloadMusic = true
+            }
             AvPlayer.playAudio(nextMusic.url)
           })
       }
