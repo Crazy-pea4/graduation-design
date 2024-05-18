@@ -6,22 +6,20 @@ import { httpRequestGet } from '../../../Utils/HttpRequest'
 @Component
 export struct Record {
   @StorageLink('userId') userId: string = ''
-  @State list: MList[] = [] as MList[]
-
-  async aboutToAppear() {
-    const {code, data} = await httpRequestGet(`user/${this.userId}/record`, undefined, true)
-    if (code === 200)
-      this.list = data;
+  @Prop obj: {
+    author: string,
+    picUrl: string,
+    recordList: MList[]
   }
 
   build() {
     Column() {
       Scroll() {
         Column() {
-          ForEach(this.list, (item, index) => {
+          ForEach(this.obj.recordList, (item, index) => {
             MusicItem({
-              item: item as MList,
-              list: this.list as MList[],
+              item: { author: this.obj.author, picUrl: this.obj.picUrl, ...item } as MList,
+              list: this.obj.recordList as MList[],
               index: index as number
             })
           })

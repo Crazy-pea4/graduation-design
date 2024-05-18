@@ -1,9 +1,9 @@
 import { GroundItemRouterParams, GroundItemType } from '../type'
 
+@Preview
 @Component
 export struct GroundItem {
   item: GroundItemType
-  @State isLike: boolean = false
   onClickEvent: (routerParams: GroundItemRouterParams) => void
 
   build() {
@@ -21,7 +21,6 @@ export struct GroundItem {
         Image(this.item.topicPic)
           .width(50)
           .height(50)
-          .backgroundColor("#ddf")
 
         Row() {
           // 音乐标题
@@ -36,24 +35,18 @@ export struct GroundItem {
         .margin({ left: 10 })
 
         Row() {
-          // 喜欢
-          Image(this.isLike ? $r("app.media.red_like") : $r("app.media.like"))
-            .width(20)
-            .height(20)
+          Text("进入评论区>")
+            .fontSize(12)
             .alignSelf(ItemAlign.End)
-            .onClick(() => {
-              // 后台接口
-              this.isLike = !this.isLike
-            })
         }
-        .position({"x":"90.00%","y":"26%"})
+        .position({"x":"75%","y":"50%"})
       }
       .alignItems(VerticalAlign.Center)
     }
     .margin({ bottom: 15 })
     .padding(10)
     .width("100%")
-    .height(120)
+    .height(110)
     .backgroundColor("#f3f3f3")
     .borderRadius(10)
     .onClick(() => {

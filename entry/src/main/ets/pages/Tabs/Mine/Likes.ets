@@ -6,13 +6,7 @@ import { httpRequestGet } from '../../../Utils/HttpRequest'
 @Component
 export struct Likes {
   @StorageLink('userId') userId: string = ''
-  @State list: MList[] = [] as MList[]
-
-  async aboutToAppear() {
-    const {code, data} = await httpRequestGet(`user/${this.userId}/music`, undefined, true)
-    if (code === 200)
-      this.list = data;
-  }
+  @Prop list: MList[]
 
   build() {
     Column() {

@@ -1,4 +1,5 @@
 import router from '@ohos.router'
+import { PersistentKey, PersistentState } from '../Utils/AppStorage'
 import { httpRequestPost } from '../Utils/HttpRequest'
 
 @Entry
@@ -9,12 +10,21 @@ struct Login {
   @StorageLink('token') token: string = ''
   @StorageLink('nickname') nickname: string = ''
   @StorageLink('userId') userId: string = ''
+  @StorageLink('avatarUrl') avatarUrl: string = ''
 
   build() {
     Flex({ direction: FlexDirection.Column, justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
       Column() {
-
+        Text('上一页 ')
+          .fontSize(17)
+          .textAlign(TextAlign.Center)
       }
+      .position({x: 0, y: 0})
+      .onClick(() => {
+          router.back()
+      })
+
+      Image($r('app.media.defaultHeaderIcon'))
       .width(150)
       .height(150)
       .backgroundColor("#ddf")
@@ -47,11 +57,12 @@ struct Login {
             const formObj = {}
             formObj['phoneNumber'] = this.phoneNumber
             formObj['password'] = this.password
-            const {code, token, userId, data: { nickname }} = await httpRequestPost('auth/', formObj)
+            const {code, token, userId, data: { nickname, avatarUrl }} = await httpRequestPost('auth/', formObj)
             if (code === 200) {
               this.token = token as string
               this.nickname = nickname
               this.userId = userId as string
+              this.avatarUrl = avatarUrl as string
               setTimeout(() => {
                 router.replaceUrl({ url: 'pages/Index' })
               }, 1000)
@@ -74,6 +85,6 @@ struct Login {
     }
     .width('100%')
     .height('100%')
-    .padding({ top: 10, bottom: 10, left: 20, right: 20 })
+    .padding(20)
   }
 }

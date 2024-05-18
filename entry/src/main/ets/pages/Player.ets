@@ -91,7 +91,6 @@ struct Player {
       }
       .width('100%')
       .height(50)
-      .backgroundColor("#ffdd")
 
       Column() {
         Slider({ value: this.isSliderDrag ? this.dragCurrentPercent : (this.musicTime / this.duration * 100) })

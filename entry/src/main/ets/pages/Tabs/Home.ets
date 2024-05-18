@@ -1,3 +1,4 @@
+import fs from '@ohos.file.fs';
 import router from '@ohos.router';
 import { MockData, mockData } from "../../const/mock"
 import { PlayCard } from "../../components/PlayCard"
@@ -5,7 +6,13 @@ import { MusicItem } from '../../components/MusicItem';
 import { SearchBox } from '../../components/SearchBox';
 import { MList } from "../../type/index"
 import { showDialog } from '../../Utils/utils';
-import { httpRequestGet } from '../../Utils/HttpRequest';
+import { httpRequestGet, httpRequestPost } from '../../Utils/HttpRequest';
+import picker from '@ohos.file.picker';
+import request from '@ohos.request';
+import common from '@ohos.app.ability.common';
+import { BASE_URL } from '../../const';
+
+let photoPicker = new picker.PhotoViewPicker();
 
 @Component
 export struct Home {
@@ -13,6 +20,8 @@ export struct Home {
   @StorageLink('nickname') nickname: string = ''
   @StorageLink('musicList') musicList: string = '[]'
   @StorageLink('userId') userId: string = ''
+  @StorageLink('avatarUrl') avatarUrl: string = ''
+  @State avatarTempUrl: string = ''
   @State reqData: MList[] = []
 
   async aboutToAppear() {
@@ -31,12 +40,56 @@ export struct Home {
             Flex({ direction: FlexDirection.Column }) {
               /* 个人卡片 */
               Flex({ justifyContent: FlexAlign.SpaceBetween, alignItems: ItemAlign.End }) {
-                Image($r('app.media.defaultHeaderIcon'))
-                  .width(40)
-                  .height(40)
+                Image(this.avatarTempUrl || this.avatarUrl || $r('app.media.defaultHeaderIcon'))
+                  .width(60)
+                  .height(60)
                   .borderRadius(40)
                   .margin({ right: 10 })
                   .visibility(this.token ? Visibility.Visible : Visibility.None)
+                  .onClick(async () => {
+                    const { photoUris } = await photoPicker.select({
+                      MIMEType: picker.PhotoViewMIMETypes.IMAGE_TYPE,
+                      maxSelectNumber: 1
+                    })
+                    const photoUrl = photoUris[0]
+                    this.avatarTempUrl = photoUrl
+                    console.log(photoUrl, 'photoUrl')
+                    // 将本地应用文件上传至网络服务器
+                    try {
+                      const context = getContext(this) as common.UIAbilityContext;
+                      // 获取应用文件路径
+                      let cacheDir = context.cacheDir;
+                      const file = fs.openSync(photoUrl, fs.OpenMode.READ_ONLY)
+                      let fileFD = file.fd
+                      await fs.copyFile(fileFD, cacheDir + '/avatar.jpg')
+
+                      // 上传任务配置项
+                      let uploadConfig = {
+                        url: `${BASE_URL}upload/${this.userId}`,
+                        header: { key1: 'Content-Type', key2: 'multipart/form-data' },
+                        method: 'POST',
+                        files: [
+                          { filename: 'avatar.jpg', name: 'file', uri: 'internal://cache/avatar.jpg', type: 'jpg' }
+                        // { filename: 'test.txt', name: 'file', uri: 'internal://cache/test.txt', type: 'txt' }
+                        ],
+                        data: []
+                      }
+                      request.uploadFile(context, uploadConfig)
+                        .then((uploadTask) => {
+                          uploadTask.on('complete', (taskStates) => {
+                            for (let i = 0; i < taskStates.length; i++) {
+                              console.info(`upload complete taskState: ${JSON.stringify(taskStates[i])}`);
+                            }
+                          });
+                        })
+                        .catch((err) => {
+                          console.error(`Invoke uploadFile failed, code is ${err.code}, message is ${err.message}`);
+                        })
+                    } catch (err) {
+                      console.error(`Invoke uploadFile failed, code is ${err.code}, message is ${err.message}`);
+                    }
+                  })
+
                 Text(this.nickname)
                   .visibility(this.token ? Visibility.Visible : Visibility.None)
                 Button('登录').onClick(() => {
@@ -67,7 +120,7 @@ export struct Home {
                     .width(40)
                   Text('喜欢')
                 }
-                .onClick(() => {
+                .onClick(async () => {
                   router.pushUrl({ url: "pages/Mine", params: {
                     mine: 1
                   } })

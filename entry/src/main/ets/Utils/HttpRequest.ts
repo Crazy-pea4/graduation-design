@@ -16,7 +16,7 @@ async function base(url: string, method: http.RequestMethod, extraData = {}, isC
   if(!AppState.getState(PersistentKey.token) && needJumpLogin) {
     showToast('需要先登录')
     setTimeout(() => {
-      router.pushUrl({url: "pages/Login"})
+      router.replaceUrl({url: "pages/Login"})
     }, 1500)
     return;
   }

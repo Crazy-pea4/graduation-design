@@ -34,6 +34,7 @@ function deleteFile() {
   fs.unlinkSync(filesDir + '/audio.m4a');
 }
 
+@Preview
 @Component
 export struct Record {
   @StorageLink('userId') userId: string = ''
@@ -108,19 +109,19 @@ export struct Record {
           })
       }
 
-      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center }) {
-        TextInput({ text: this.title, placeholder: '专辑名称...' })
+      Flex({ direction: FlexDirection.Column, justifyContent:FlexAlign.Center, alignItems: ItemAlign.Center }) {
+        TextInput({ text: this.title, placeholder: '录音名称...' })
           .height(40)
           .borderRadius(0)
           .onChange((value) => {
             this.title = value
           })
-        Image($r("app.media.defaultCover"))
-          .width("100%")
+        // Image($r("app.media.defaultCover"))
+        //   .width("100%")
 
         Image($r("app.media.record"))
           .margin({ top: 20 })
-          .width(100)
+          .width("70%")
           .opacity(this.recordTouch ? 0.7 : 1)
           .onTouch((event) => {
             switch (event.type) {
@@ -152,8 +153,6 @@ export struct Record {
             }
           })
       }
-      .margin({ top: 100 })
-      // .height(490)
     }
     .width("100%")
     .height("100%")

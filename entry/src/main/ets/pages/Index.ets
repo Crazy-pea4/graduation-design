@@ -9,6 +9,7 @@ PersistentState.setStorage(PersistentKey.token, '')
 PersistentState.setStorage(PersistentKey.musicList, '[]')
 PersistentState.setStorage(PersistentKey.nickname, '')
 PersistentState.setStorage(PersistentKey.userId, '')
+PersistentState.setStorage(PersistentKey.avatarUrl, '')
 
 export const controller: TabsController = new TabsController()
 

@@ -18,7 +18,6 @@ export struct PlayCard {
       .margin({ left: 10 })
       .flexGrow(1)
       .height('100%')
-      .backgroundColor("#aac")
 
       Flex({ justifyContent: FlexAlign.Center, alignItems: ItemAlign.Center }) {
         Image(this.isPlaying ? $r("app.media.pause") : $r("app.media.play"))
@@ -27,7 +26,6 @@ export struct PlayCard {
       }
       .width(40)
       .height('100%')
-      .backgroundColor('#aff')
       .onClick((e) => {
         if (this.isPlaying) {
           AvPlayer.pauseAudio()
